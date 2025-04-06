@@ -1,9 +1,10 @@
 import './assets/main.css'
-
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap/dist/js/bootstrap.js'
 import { createApp } from 'vue'
 import App from './App.vue'
-import Landing from './components/Landing.vue'
-import Login from './components/Login.vue'
+import Landing from './pages/Landing.vue'
+import Login from './pages/Login.vue'
 
 import { createWebHistory, createRouter } from 'vue-router'
 

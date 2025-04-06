@@ -1,0 +1,24 @@
+table th {
+    /* background-color: grey; */
+    text-align: left;
+    /* background-color: red; */
+    /* padding-right: 0.5em; */
+    /* padding-left: 0.5em; */
+}
+
+table tr td {
+    text-align: left;
+}
+
+.popup {
+    position: fixed;
+    top: 5em;
+    left: 5em;
+    right: 5em; 
+    bottom: 5em;
+    background-color:blue;
+}
+
+.hidden {
+    display: none;
+}

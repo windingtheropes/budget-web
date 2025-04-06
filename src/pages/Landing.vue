@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch, type Ref } from "vue"
 import { type TransactionEntry } from "@/types";
+import NewTransaction from '..//components/NewTransaction.vue'
 
 let entries: Ref<TransactionEntry[]> = ref([]);
 
@@ -18,26 +19,33 @@ const updateEntries = async () => {
 }
 
 updateEntries()
+
+const getYMD = (seconds: number): string => {
+  let date = new Date(seconds * 1000)
+  return `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`
+}
 console.log(entries)
 </script>
 
 <template>
   <h1>Transactions</h1>
-  <table>
+  <table class="table">
     <thead>
       <tr>
-        <!-- <th>Date</th> -->
-        <th>Amount</th>
-        <th>Currency</th>
-        <th>Tags</th>
+        <th scope="col">Date</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Currency</th>
+        <th scope="col">Description</th>
+        <th scope="col">Tags</th>
       </tr>
     </thead>
-    <tbody v-for="entry in entries">
-      <tr :data-id="entry.Id">
-        <!-- <td>{{ new Date(entry.Unix_Timestamp) }}</td> -->
+    <tbody>
+      <tr v-for="entry in entries" :data-id="entry.Id">
+        <td>{{ getYMD(entry.Unix_Timestamp)}}</td>
         <td>{{ entry.Amount }}</td>
         <td>{{ entry.Currency }}</td>
-        <td v-for="tag in entry.Tags">{{tag.Name}}</td>
+        <td>{{ entry.Msg }}</td>
+        <td v-for="tag in entry.Tags"><span :data-id="tag.Id">{{ tag.Name }}</span></td>
       </tr>
     </tbody>
   </table>

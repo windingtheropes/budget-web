@@ -6,6 +6,7 @@ export interface Tag {
 export interface TransactionEntry {
 	Id:             number,
 	User_Id:        number,
+	Msg: 			string,
 	Amount:         number,
 	Tags: Tag[],
 	Currency:       string,
