@@ -3,13 +3,13 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.js'
 import { createApp } from 'vue'
 import App from './App.vue'
-import Landing from './pages/Landing.vue'
+import Transactions from './pages/Transactions.vue'
 import Login from './pages/Login.vue'
 
 import { createWebHistory, createRouter } from 'vue-router'
 
 const routes = [
-  { path: '/', component: Landing },
+  { path: '/transactions', component: Transactions },
   { path: '/login', component: Login },
 ]
 

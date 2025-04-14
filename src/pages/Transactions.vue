@@ -34,18 +34,24 @@ console.log(entries)
       <tr>
         <th scope="col">Date</th>
         <th scope="col">Amount</th>
-        <th scope="col">Currency</th>
+        <!-- <th scope="col">Currency</th> -->
         <th scope="col">Description</th>
         <th scope="col">Tags</th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="entry in entries" :data-id="entry.Id">
+      <tr v-for="entry in entries" :data-id="entry.Id" :class="(() => { if (entry.Amount > 0) {return 'entry-positive'} else {return 'entry-negative'} })()">
         <td>{{ getYMD(entry.Unix_Timestamp)}}</td>
-        <td>{{ entry.Amount }}</td>
-        <td>{{ entry.Currency }}</td>
+        <td>${{ entry.Amount }} {{ entry.Currency }}</td>
+        <!-- <td>{{ entry.Currency }}</td> -->
         <td>{{ entry.Msg }}</td>
         <td v-for="tag in entry.Tags"><span :data-id="tag.Id">{{ tag.Name }}</span></td>
+      </tr>
+      <tr class="entry-positive">
+        <td>2025/04/14</td>
+        <td>$100 CAD</td>
+        <td>Phone Bill</td>
+        <td><span data-id="tag.Id" class="tag red">Utilities</span></td>
       </tr>
     </tbody>
   </table>

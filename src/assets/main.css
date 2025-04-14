@@ -1,24 +1,22 @@
-table th {
-    /* background-color: grey; */
-    text-align: left;
-    /* background-color: red; */
-    /* padding-right: 0.5em; */
-    /* padding-left: 0.5em; */
+:root {
+    --muted-red: #ff5340;
+    --muted-blue: #4080ff;
+    --muted-yellow: #efff40;
+    --muted-green: #70ff40;
+    --muted-orange: #ff9040;
 }
 
-table tr td {
-    text-align: left;
+body {
+    padding-top: 1em;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
 }
 
-.popup {
-    position: fixed;
-    top: 5em;
-    left: 5em;
-    right: 5em; 
-    bottom: 5em;
-    background-color:blue;
-}
-
-.hidden {
-    display: none;
+tr td .tag.red {
+background-color: var(--muted-blue);
+border-radius: 5px;
+padding: 2.5%;
+color: white;
+font-size: 14px;
+margin-right: 0.25em;
 }
