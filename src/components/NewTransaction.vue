@@ -1,16 +1,25 @@
 <script setup lang="ts">
-
+    const props = defineProps(['id'])
 </script>
 
 <template>
-    <div class="popup">
-        <h1>New Transaction</h1>
-        <form>
-            <input ref="amount" name="amount" placeholder="0.00" type="text">
-            <input ref="currency" name="currency" placeholder="CAD" type="text">
-            <input ref="description" name="description" placeholder="Description" type="text">
-
-            <button type="submit" v-on:click.prevent="">Insert</button>
-        </form>
+<div class="modal fade" :id="props.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
     </div>
+  </div>
+</div>
 </template>

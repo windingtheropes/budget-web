@@ -24,11 +24,11 @@ const validate_login = async () => {
 
 <template>
   <h1>Login</h1>
-  <form>
+  <form style="width: 25%">
     <div class="form-group">
       <label for="email">Email address</label>
       <input ref="email" type="email" class="form-control" id="email" aria-describedby="emailHelp"
-        placeholder="Enter email">
+        placeholder="Email">
     </div>
     <div class="form-group">
       <label for="password">Password</label>

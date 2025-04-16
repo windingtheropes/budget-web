@@ -5,7 +5,9 @@
     --muted-green: #70ff40;
     --muted-orange: #ff9040;
 }
-
+h1 {
+    padding-bottom: 0.5em;
+}
 body {
     padding-top: 1em;
     padding-left: 1.5em;
@@ -20,3 +22,8 @@ color: white;
 font-size: 14px;
 margin-right: 0.25em;
 }
+
+.form-group {
+    padding-bottom: 1em;
+}
+
