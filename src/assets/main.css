@@ -6,24 +6,19 @@
     --muted-orange: #ff9040;
 }
 h1 {
+    padding-top: 0.5em;
     padding-bottom: 0.5em;
 }
-body {
-    padding-top: 1em;
-    padding-left: 1.5em;
-    padding-right: 1.5em;
-}
+
 
 tr td .tag.red {
 background-color: var(--muted-blue);
-border-radius: 5px;
-padding: 2.5%;
+border-radius: 0.25em;
+padding: 0.35em;
 color: white;
 font-size: 14px;
 margin-right: 0.25em;
 }
-
 .form-group {
     padding-bottom: 1em;
 }
-

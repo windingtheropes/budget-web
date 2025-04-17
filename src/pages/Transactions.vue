@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch, type Ref } from "vue"
+import { computed, ref, type Ref } from "vue"
 import { type TransactionEntry } from "@/types";
 import NewTransaction from '..//components/NewTransaction.vue'
 
@@ -12,7 +12,9 @@ const updateEntries = async () => {
     method: "GET",
     headers
   })
-
+  if(response.status != 200) {
+    
+  }
   const entries_list: TransactionEntry[] = JSON.parse(await response.text()).Value
   // console.log(entries_list)
   entries.value = entries_list

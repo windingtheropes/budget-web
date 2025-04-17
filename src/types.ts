@@ -12,4 +12,8 @@ export interface TransactionEntry {
 	Currency:       string,
 	Unix_Timestamp: number
 }
-
+export interface LoginResponse {
+	Code: number,
+	Message: string, 
+	Token: string,
+}
