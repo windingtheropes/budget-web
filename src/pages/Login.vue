@@ -2,46 +2,39 @@
 import { ref } from 'vue';
 const email = ref(null);
 const password = ref(null);
-
-const validate_login = async () => {
-  const email_value: string = email.value.value
-  const password_value: string = password.value.value
-  const response = await fetch("http://127.0.0.1:3000/api/account/login", {
-    method: "PUT",
-    body: JSON.stringify({ email: email_value, password: password_value }),
-  })
-
-  // follows format of {code: int, message/token: string}
-  const { code, message, token } = JSON.parse(await response.text())
-  if (code == 200) {
-    localStorage.setItem("token", token)
-    alert("logged in")
-  } else {
-    alert(code + " " + message)
+import { login } from '@/argent';
+import { type LoginForm, type LoginResponse } from '@/types';
+import { useRouter } from 'vue-router';
+const router = useRouter()
+const send_login = async () => {
+  const credentials: LoginForm  = {
+    email: email.value.value, password: password.value.value
+  }
+  const resp: LoginResponse = await login(credentials);
+  if (resp.code == 200) {
+    localStorage.setItem("token", resp.token)
+    router.push("/on/overview")
   }
 } 
 </script>
 
 <template>
-  <div class="container">
-    <div class="login">
-      <h1>Login</h1>
-      <form class="login">
-        <div class="form-group">
-          <label for="email">Email address</label>
-          <input ref="email" type="email" class="form-control" id="email" aria-describedby="emailHelp"
-            placeholder="Email">
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input ref="password" type="password" class="form-control" id="password" placeholder="Password">
-        </div>
-        <!-- <div class="form-group form-check">
-      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-      <label class="form-check-label" for="exampleCheck1">Check me out</label>
-    </div> -->
-        <button type="submit" v-on:click.prevent="validate_login()" class="btn btn-primary">Submit</button>
-      </form>
-    </div>
+
+  <div class="content-wrapper">
+    <h1>Login</h1>
+    <form class="login">
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input ref="email" type="email" class="form-control" id="email" aria-describedby="emailHelp"
+          placeholder="Email">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input ref="password" type="password" class="form-control" id="password" placeholder="Password">
+      </div>
+    <p>No account? <RouterLink class="link-opacity-80-hover" to="/register">Sign Up</RouterLink></p>
+    <button type="submit" v-on:click.prevent="send_login()" class="btn btn-primary">Log In</button>
+    </form>
   </div>
+
 </template>

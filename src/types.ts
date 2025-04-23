@@ -1,3 +1,5 @@
+import type { StringMappingType } from "typescript"
+
 export interface Tag {
 	Id: number,
 	Name: string,
@@ -13,7 +15,24 @@ export interface TransactionEntry {
 	Unix_Timestamp: number
 }
 export interface LoginResponse {
-	Code: number,
-	Message: string, 
-	Token: string,
+	code: number,
+	message: string, 
+	token: string,
+}
+
+export interface LoginForm {
+	email: string, 
+	password: string
+}
+export interface SignUpForm {
+	name: string,
+	email: string, 
+	password: string
+}
+export interface SessionForm {
+	token: string
+}
+export interface GenericResponse {
+	code: number,
+	message: string
 }

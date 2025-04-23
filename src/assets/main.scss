@@ -1,0 +1,73 @@
+:root {
+    --muted-red: #ff5340;
+    --muted-blue: #4080ff;
+    --muted-yellow: #efff40;
+    --muted-green: #70ff40;
+    --muted-orange: #ff9040;
+}
+
+tr td .tag.red {
+background-color: var(--muted-blue);
+border-radius: 0.25em;
+padding: 0.35em;
+color: white;
+font-size: 14px;
+margin-right: 0.25em;
+}
+
+.content-wrapper {
+    padding: 0.0625em; 
+    padding-top: 2em;
+    margin: auto; 
+    max-width: 90%;
+}
+.content-wrapper * {
+    padding-bottom: 0.5em;
+}
+.flex-container {
+    display: flex;
+}
+
+.sidebar {
+    background-color: #001259;
+    height: 100vh;
+    width: 12.5em;
+    position: sticky;
+    top: 0;
+}
+
+.sidebar {
+    .nav-link {
+        color: #dee8ff;
+        background-color:hsl(228, 100%, 20%);
+        border-radius: 0.4em;
+    }
+    .nav-link.brand {
+        padding: 1em;
+        background-color:black;
+        border-radius: 0;
+    }
+}
+
+.content-container {
+    min-height: 100vh;
+    flex-grow: 1;
+}
+
+.topnav-right {
+    align-self: flex-end;
+    align-items: flex-end;
+} 
+
+.navbar.topnav {
+    justify-content: space-between;
+    padding-right: 1.5em;
+    padding-left: 1.5em;
+    border-bottom: 1px solid hsl(0, 0%, 95%)
+}
+
+.nav-link.nav-signup {
+    background-color:blue;
+    color:white;
+    border-radius: 10em;
+}

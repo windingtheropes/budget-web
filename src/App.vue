@@ -5,21 +5,21 @@ import { RouterLink, RouterView } from 'vue-router'
 <template>
   <header>
     <div class="wrapper">
-      <nav class="navbar navbar-dark navbar-expand-lg" style="background-color: #4080ff;">
-        <a class="navbar-brand" href="#">Budget</a>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <RouterLink class="nav-link" to="/overview">Overview</RouterLink>
-            </li>
-            <li class="nav-item">
-              <RouterLink class="nav-link" to="/transactions">Transactions</RouterLink>
-            </li>
-            <li class="nav-item">
-              <RouterLink class="nav-link" to="/login">Login</RouterLink>
-            </li>
-          </ul>
-        </div>
+      <nav class="navbar navbar-expand-lg topnav">
+        <a class="navbar-brand" style="color: blue; font-weight: 700;"  href="#">Budget</a>
+        <ul class="navbar-nav topnav-middle">
+          <li class="nav-item">
+            <RouterLink class="nav-link" to="/on/overview">Overview</RouterLink>
+          </li>
+        </ul>
+        <ul class="navbar-nav topnav-right">
+          <li class="nav-item">
+            <RouterLink class="nav-link nav-login" to="/login">Log In</RouterLink>
+          </li>
+          <li class="nav-item">
+            <RouterLink class="nav-link nav-signup" to="/register">Sign Up</RouterLink>
+          </li>
+        </ul>
       </nav>
     </div>
   </header>

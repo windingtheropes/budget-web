@@ -3,16 +3,18 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.js'
 import { createApp } from 'vue'
 import App from './App.vue'
-import Transactions from './pages/Transactions.vue'
-import Overview from './pages/Overview.vue'
+import Transactions from './pages/on/Transactions.vue'
+import Overview from './pages/on/Overview.vue'
 import Login from './pages/Login.vue'
+import Register from './pages/Register.vue'
 
-import { createWebHistory, createRouter } from 'vue-router'
+import { createWebHistory, createRouter, useRouter } from 'vue-router'
 
 const routes = [
-  { path: '/overview', component: Overview },
-  { path: '/transactions', component: Transactions },
+  { path: '/on/overview', component: Overview },
+  { path: '/on/transactions', component: Transactions },
   { path: '/login', component: Login },
+  { path: '/register', component: Register }
 ]
 
 const router = createRouter({
