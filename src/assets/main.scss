@@ -1,51 +1,85 @@
-:root {
-    --muted-red: #ff5340;
-    --muted-blue: #4080ff;
-    --muted-yellow: #efff40;
-    --muted-green: #70ff40;
-    --muted-orange: #ff9040;
+$muted-red: #ff5340;
+$muted-blue: hsl(220, 100%, 63%);
+$blue: hsl(220, 100%, 43%);
+$dark-blue: hsl(220, 100%, 11%);
+$dark-dark-blue: hsl(220, 100%, 8%);
+$dark-dark-dark-blue: hsl(220, 100%, 6%);
+$white-blue-light: hsl(220, 100%, 96%);
+$muted-yellow: #efff40;
+$muted-green: hsl(139, 100%, 43%);
+$muted-orange: #ff9040;
+$white: hsl(0, 0%, 95%);
+
+
+.tag {
+    border-radius: 0.25em;
+    background-color: $muted-blue;
+    padding: 0.35em;
+    color: white;
+    font-size: 14px;
+    margin-right: 0.25em;
 }
 
-tr td .tag.red {
-background-color: var(--muted-blue);
-border-radius: 0.25em;
-padding: 0.35em;
-color: white;
-font-size: 14px;
-margin-right: 0.25em;
+.logo-button {
+    border-radius: 0.25em;
+    background-color: $muted-green;
+    color: white;
+    padding: 0.25em;
+    padding-right: 0.45em;
+    padding-left: 0.45em;
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    width: 3.75em;
 }
 
 .content-wrapper {
-    padding: 0.0625em; 
+    padding: 0.0625em;
     padding-top: 2em;
-    margin: auto; 
+    margin: auto;
     max-width: 90%;
 }
-.content-wrapper * {
-    padding-bottom: 0.5em;
+
+.headbar {
+    justify-content: space-between;
+    align-items: center;
 }
+
+.headbar * {
+    margin-bottom: 0;
+}
+
 .flex-container {
     display: flex;
 }
 
 .sidebar {
-    background-color: #001259;
+    color: white;
+    background-color: $dark-dark-blue;
     height: 100vh;
     width: 12.5em;
     position: sticky;
     top: 0;
-}
+    padding: 0.5em;
 
-.sidebar {
     .nav-link {
-        color: #dee8ff;
-        background-color:hsl(228, 100%, 20%);
+        color: $white-blue-light;
+        // background-color: $dark-blue;
         border-radius: 0.4em;
+        // border: 0.5px solid $dark-blue;
+        background-color: $dark-dark-blue;
     }
+
+    .nav-link:hover,
+    .nav-link:focus {
+        color: $white-blue-light;
+        background-color: $dark-blue;
+    }
+
     .nav-link.brand {
+        font-weight: 600;
         padding: 1em;
-        background-color:black;
-        border-radius: 0;
+        background-color: $dark-dark-dark-blue;
     }
 }
 
@@ -54,20 +88,101 @@ margin-right: 0.25em;
     flex-grow: 1;
 }
 
-.topnav-right {
-    align-self: flex-end;
-    align-items: flex-end;
-} 
-
 .navbar.topnav {
+    * {
+        border-radius: 10em;
+    }
+
     justify-content: space-between;
     padding-right: 1.5em;
     padding-left: 1.5em;
-    border-bottom: 1px solid hsl(0, 0%, 95%)
+    border-bottom: 1px solid hsl(0, 0%, 95%);
+
+    .navbar-brand {
+        color: $blue;
+        font-weight: 700;
+    }
+
+    .nav-link.nav-account {
+        padding-left: 0.75em;
+        padding-right: 0.75em;
+        margin-left: 0.5em;
+    }
+
+    .nav-signup {
+        background-color: $blue;
+        color: white
+    }
 }
 
-.nav-link.nav-signup {
-    background-color:blue;
-    color:white;
-    border-radius: 10em;
+.modal-container {
+    width: 100%;
+    height: 100vh;
+    z-index: 3;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    margin-top: 5em;
+
+    .budget-modal.small {
+        width: 25em;
+        max-height: 50vh;
+    }
+
+    .budget-modal.med {
+        width: 35em;
+        max-height: 60vh;
+    }
+
+    .budget-modal.large {
+        width: 55em;
+        max-height: 35em;
+    }
+
+    .budget-modal {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .modal-header,
+        .modal-footer {
+            padding: 1.5em;
+            padding-top: 0.75em;
+            padding-bottom: 0.75em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid $white;
+        }
+
+        .modal-footer {
+            * {
+                margin-left: 0.5em;
+            }
+            justify-content: flex-end;
+            border-top: 1px solid $white;
+        }
+
+        .modal-header,
+        .modal-footer {
+            * {
+                margin-bottom: 0;
+                margin-top: 0;
+            }
+        }
+
+        .modal-body {
+            padding: 1.5em;
+        }
+
+        background-color: white;
+        border-radius: 1em;
+        border: 1px solid $white;
+
+        overflow: scroll;
+        box-shadow: 1px 1px 6px 0px hsla(0, 0%, 0%, 0.38);
+    }
 }
