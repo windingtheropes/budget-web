@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, type Ref, onBeforeMount } from "vue"
-import { check_auth } from "@/argent";
-import { type TransactionEntry } from "@/types";
-import NewTransaction from '..//components/NewTransaction.vue'
+import { check_auth, get_types } from "@/argent";
+import { type TransactionEntry, type TransactionType } from "@/types";
 import SidebarContainer from "@/components/on/SidebarContainer.vue";
 import { useRouter } from "vue-router";
 const router = useRouter()
@@ -12,6 +11,7 @@ onBeforeMount(async () => {
   }
 })
 
+let types: Ref<TransactionType[]> = ref([]) 
 let entries: Ref<TransactionEntry[]> = ref([]);
 
 const updateEntries = async () => {
@@ -29,19 +29,64 @@ const updateEntries = async () => {
   entries.value = entries_list
 }
 
+(async () => {
+  const t = await get_types()
+  types.value = t
+})()
+
 updateEntries()
 
 const getYMD = (seconds: number): string => {
   let date = new Date(seconds * 1000)
   return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
 }
-console.log(entries)
 </script>
 
 <template>
+  <div class="modal-container">
+    <div class="budget-modal med">
+      <div class="modal-header">
+        <h5>New Transaction</h5>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="col-md-4">
+            <label for="basic-url" class="form-label">Amount</label>
+            <div class="input-group">
+              <input type="number" step="0.01" class="form-control" id="amount"
+                aria-describedby="basic-addon3 basic-addon4">
+              <span class="input-group-text" id="basic-addon3">CAD</span>
+            </div>
+            <div class="form-text" id="basic-addon4">Currently only supports CAD.</div>
+          </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01">Type</label>
+            <select class="form-select" id="inputGroupSelect01">
+              <option v-for="type in types" :value="type.Id">{{ type.Name }}</option>
+            </select>
+          </div>
+          <div class="row-mb">
+            <label for="validationCustom01" class="form-label">Description</label>
+            <input type="text" step="0.01" class="form-control" id="validationCustom01" value="Mark" required>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" v-on:click.prevent="" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+  </div>
+
   <SidebarContainer>
     <div class="content-wrapper">
-      <h1>Transactions</h1>
+      <div class="flex-container headbar">
+        <h1>Transactions</h1>
+        <a class="logo-button" href="#">
+          <p>+</p>
+          <p>New</p>
+        </a>
+      </div>
       <table class="table">
         <thead>
           <tr>
@@ -67,6 +112,10 @@ console.log(entries)
           </tr>
         </tbody>
       </table>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        Launch demo modal
+      </button>
     </div>
   </SidebarContainer>
+
 </template>
