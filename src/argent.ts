@@ -1,4 +1,4 @@
-import { type SignUpForm, type GenericResponse, type SessionForm } from "./types"
+import { type ValueResponse, type TransactionType, type SignUpForm, type GenericResponse, type SessionForm, type UserInfo } from "./types"
 export const create_account = async (form: SignUpForm): Promise<GenericResponse>  => {
   const response = await fetch("http://127.0.0.1:3000/api/account/new", {
     method: "POST",
@@ -21,9 +21,11 @@ export const login = async (form: LoginForm): Promise<LoginResponse>  => {
 } 
 
 export const get_session = async (form: SessionForm): Promise<GenericResponse>  => {
+  const headers = new Headers()
+  headers.append("Authorization", `Bearer ${localStorage.getItem("token")}`)
   const response = await fetch("http://127.0.0.1:3000/api/account/session", {
     method: "PUT",
-    body: JSON.stringify(form),
+    headers
   })
   const resp: GenericResponse = JSON.parse(await response.text())
   return resp
@@ -38,3 +40,22 @@ export const check_auth = async (): Promise<boolean> => {
   }
   return false
 }
+
+export const get_userinfo = async (): Promise<UserInfo>  => {
+  const headers = new Headers()
+  headers.append("Authorization", `Bearer ${localStorage.getItem("token")}`)
+  const response = await fetch("http://127.0.0.1:3000/api/account/user", {
+    method: "PUT",
+    headers
+  })
+  const resp: UserInfo = JSON.parse(await response.text())
+  return resp
+} 
+
+export const get_types = async (): Promise<TransactionType[]>  => {
+  const response = await fetch("http://127.0.0.1:3000/api/argent/type", {
+    method: "GET"
+  })
+  const resp: ValueResponse<TransactionType[]> = JSON.parse(await response.text())
+  return resp.value
+} 

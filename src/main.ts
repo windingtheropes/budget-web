@@ -1,6 +1,4 @@
 import './assets/main.css'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap/dist/js/bootstrap.js'
 import { createApp } from 'vue'
 import App from './App.vue'
 import Transactions from './pages/on/Transactions.vue'
@@ -8,7 +6,11 @@ import Overview from './pages/on/Overview.vue'
 import Login from './pages/Login.vue'
 import Register from './pages/Register.vue'
 
-import { createWebHistory, createRouter, useRouter } from 'vue-router'
+import { createWebHistory, createRouter } from 'vue-router'
+
+import { createPinia } from 'pinia'
+
+const pinia = createPinia()
 
 const routes = [
   { path: '/on/overview', component: Overview },
@@ -24,4 +26,8 @@ const router = createRouter({
 
 createApp(App)
     .use(router)
+    .use(pinia)
     .mount('#app')
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap/dist/js/bootstrap.js'

@@ -29,10 +29,22 @@ export interface SignUpForm {
 	email: string, 
 	password: string
 }
+export interface UserInfo {
+	id: number,
+	name: string,
+	email: string
+}
 export interface SessionForm {
 	token: string
 }
 export interface GenericResponse {
 	code: number,
 	message: string
+}
+export interface ValueResponse<T> {
+	value: T
+}
+export interface TransactionType {
+	Id: number,
+	Name: string
 }

@@ -6,7 +6,7 @@ import { RouterLink, RouterView } from 'vue-router'
   <header>
     <div class="wrapper">
       <nav class="navbar navbar-expand-lg topnav">
-        <a class="navbar-brand" style="color: blue; font-weight: 700;"  href="#">Budget</a>
+        <a class="navbar-brand"  href="#">Budget</a>
         <ul class="navbar-nav topnav-middle">
           <li class="nav-item">
             <RouterLink class="nav-link" to="/on/overview">Overview</RouterLink>
@@ -14,10 +14,10 @@ import { RouterLink, RouterView } from 'vue-router'
         </ul>
         <ul class="navbar-nav topnav-right">
           <li class="nav-item">
-            <RouterLink class="nav-link nav-login" to="/login">Log In</RouterLink>
+            <RouterLink class="nav-link nav-account nav-login pill" to="/login">Log In</RouterLink>
           </li>
           <li class="nav-item">
-            <RouterLink class="nav-link nav-signup" to="/register">Sign Up</RouterLink>
+            <RouterLink class="nav-link nav-account nav-signup pill" to="/register">Sign Up</RouterLink>
           </li>
         </ul>
       </nav>
