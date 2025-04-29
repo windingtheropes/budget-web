@@ -7,7 +7,7 @@ import { type LoginForm, type LoginResponse } from '@/types';
 import { useRouter } from 'vue-router';
 const router = useRouter()
 const send_login = async () => {
-  const credentials: LoginForm  = {
+  const credentials: LoginForm = {
     email: email.value.value, password: password.value.value
   }
   const resp: LoginResponse = await login(credentials);
@@ -32,8 +32,9 @@ const send_login = async () => {
         <label for="password">Password</label>
         <input ref="password" type="password" class="form-control" id="password" placeholder="Password">
       </div>
-    <p>No account? <RouterLink class="link-opacity-80-hover" to="/register">Sign Up</RouterLink></p>
-    <button type="submit" v-on:click.prevent="send_login()" class="btn btn-primary">Log In</button>
+      <p>No account? <RouterLink class="link-opacity-80-hover" to="/register">Sign Up</RouterLink>
+      </p>
+      <button type="submit" v-on:click.prevent="send_login()" class="btn btn-primary">Log In</button>
     </form>
   </div>
 
