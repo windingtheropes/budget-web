@@ -8,7 +8,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 const send_login = async () => {
   const credentials: LoginForm = {
-    email: email.value.value, password: password.value.value
+    email: email.value?.value, password: password.value?.value
   }
   const resp: LoginResponse = await login(credentials);
   if (resp.code == 200) {

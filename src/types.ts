@@ -8,18 +8,27 @@ export interface Tag {
 export interface TransactionEntry {
 	Id:             number,
 	User_Id:        number,
+	Type_Id:		number,
+	Vendor: 		string,
 	Msg: 			string,
 	Amount:         number,
 	Tags: Tag[],
 	Currency:       string,
 	Unix_Timestamp: number
 }
+export interface TransactionEntryForm {
+	type_id:		number,
+	msg: 			string,
+	vendor: 		string,
+	amount:         number,
+	currency:       string,
+	unix_timestamp: number
+}
 export interface LoginResponse {
 	code: number,
 	message: string, 
 	token: string,
 }
-
 export interface LoginForm {
 	email: string, 
 	password: string

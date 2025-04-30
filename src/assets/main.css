@@ -1,3 +1,7 @@
+body {
+  user-select: none;
+}
+
 .tag {
   border-radius: 0.25em;
   background-color: hsl(220, 100%, 63%);
@@ -97,22 +101,14 @@
   width: 100%;
   height: 100vh;
   z-index: 3;
-  position: absolute;
+  position: fixed;
   display: flex;
   justify-content: center;
   margin-top: 5em;
 }
-.modal-container .budget-modal.small {
-  width: 25em;
-  max-height: 50vh;
-}
 .modal-container .budget-modal.med {
   width: 35em;
-  max-height: 60vh;
-}
-.modal-container .budget-modal.large {
-  width: 55em;
-  max-height: 35em;
+  max-height: 30em;
 }
 .modal-container .budget-modal {
   display: flex;
@@ -150,6 +146,10 @@
 }
 .modal-container .budget-modal .modal-body {
   padding: 1.5em;
+}
+
+.hidden {
+  display: none;
 }
 
 /*# sourceMappingURL=main.css.map */

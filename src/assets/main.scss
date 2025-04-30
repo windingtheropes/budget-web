@@ -1,5 +1,6 @@
 $muted-red: #ff5340;
 $muted-blue: hsl(220, 100%, 63%);
+$light-blue: hsl(220, 100%, 73%);
 $blue: hsl(220, 100%, 43%);
 $dark-blue: hsl(220, 100%, 11%);
 $dark-dark-blue: hsl(220, 100%, 8%);
@@ -9,7 +10,9 @@ $muted-yellow: #efff40;
 $muted-green: hsl(139, 100%, 43%);
 $muted-orange: #ff9040;
 $white: hsl(0, 0%, 95%);
-
+body {
+    user-select: none; 
+}
 
 .tag {
     border-radius: 0.25em;
@@ -119,24 +122,14 @@ $white: hsl(0, 0%, 95%);
     width: 100%;
     height: 100vh;
     z-index: 3;
-    position: absolute;
+    position: fixed;
     display: flex;
     justify-content: center;
     margin-top: 5em;
 
-    .budget-modal.small {
-        width: 25em;
-        max-height: 50vh;
-    }
-
     .budget-modal.med {
         width: 35em;
-        max-height: 60vh;
-    }
-
-    .budget-modal.large {
-        width: 55em;
-        max-height: 35em;
+        max-height: 30em;
     }
 
     .budget-modal {
@@ -185,4 +178,8 @@ $white: hsl(0, 0%, 95%);
         overflow: scroll;
         box-shadow: 1px 1px 6px 0px hsla(0, 0%, 0%, 0.38);
     }
+}
+
+.hidden {
+    display: none;
 }
