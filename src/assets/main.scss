@@ -1,22 +1,39 @@
-$muted-red: #ff5340;
-$muted-blue: hsl(220, 100%, 63%);
-$light-blue: hsl(220, 100%, 73%);
-$blue: hsl(220, 100%, 43%);
-$dark-blue: hsl(220, 100%, 11%);
-$dark-dark-blue: hsl(220, 100%, 8%);
-$dark-dark-dark-blue: hsl(220, 100%, 6%);
-$white-blue-light: hsl(220, 100%, 96%);
-$muted-yellow: #efff40;
-$muted-green: hsl(139, 100%, 43%);
-$muted-orange: #ff9040;
-$white: hsl(0, 0%, 95%);
+@import "../../node_modules/bootstrap/scss/bootstrap";
+// REFERENCE PALLETE
+// // $blue: hsl(220, 100%, 43%);
+// $muted-blue: hsl(220, 100%, 63%);
+// $dark-blue: hsl(220, 100%, 11%);
+// $dark-dark-blue: hsl(220, 100%, 8%);
+// $dark-dark-dark-blue: hsl(220, 100%, 6%);
+// $white-blue: hsl(220, 100%, 96%);
+// $light-blue-border: hsl(220, 100%, 93%);
+// $light-blue-bg: hsl(220, 100%, 98%);
+
+// // TEST REDS
+// $red: hsl(0, 100%, 43%);
+// $muted-red: hsl(0, 100%, 63%);
+// $dark-red: hsl(0, 100%, 11%);
+// $dark-dark-red: hsl(0, 100%, 8%);
+// $dark-dark-dark-red: hsl(0, 100%, 6%);
+// $white-red: hsl(0, 100%, 96%);
+// $light-red-border: hsl(0, 100%, 93%);
+// $light-red-bg: hsl(0, 100%, 98%);
+
+// $muted-yellow: #efff40;
+// $muted-green: hsl(139, 100%, 43%);
+// $muted-orange: #ff9040;
+// $white: hsl(0, 0%, 95%);
+
+$blue-950: shade-color($blue, 85%);
+$blue-1000: shade-color($blue, 90%);
+
 body {
     user-select: none; 
 }
 
 .tag {
     border-radius: 0.25em;
-    background-color: $muted-blue;
+    background-color: $blue;
     padding: 0.35em;
     color: white;
     font-size: 14px;
@@ -25,7 +42,7 @@ body {
 
 .logo-button {
     border-radius: 0.25em;
-    background-color: $muted-green;
+    // background-color: $muted-green;
     color: white;
     padding: 0.25em;
     padding-right: 0.45em;
@@ -58,32 +75,39 @@ body {
 
 .sidebar {
     color: white;
-    background-color: $dark-dark-blue;
+    background-color: $blue-1000;
     height: 100vh;
     width: 12.5em;
     position: sticky;
     top: 0;
-    padding: 0.5em;
 
-    .nav-link {
-        color: $white-blue-light;
-        // background-color: $dark-blue;
-        border-radius: 0.4em;
-        // border: 0.5px solid $dark-blue;
-        background-color: $dark-dark-blue;
+    .sidebar-brand {
+        .nav-link.brand {
+            color:white;
+            margin:0;
+            font-weight: 600;
+            font-size: 18pt;
+            padding-top: 1em;
+            padding-bottom: 1em;
+        }
+        // border-bottom: 2px solid $blue-900;
     }
-
-    .nav-link:hover,
-    .nav-link:focus {
-        color: $white-blue-light;
-        background-color: $dark-blue;
+    .sidebar-links {
+        .nav-link {
+            height: 3em;
+            align-content: center;
+            color: $white;
+            border-radius: 0.4em;
+        }
+    
+        .nav-link:hover,
+        .nav-link:focus {
+            color: white;
+            background-color: $blue-950;
+        }
     }
-
-    .nav-link.brand {
-        font-weight: 600;
-        padding: 1em;
-        background-color: $dark-dark-dark-blue;
-    }
+   
+    
 }
 
 .content-container {
@@ -182,4 +206,37 @@ body {
 
 .hidden {
     display: none;
+}
+
+.toastalert {
+    $width: 10em;
+    $height: 3em;
+
+    // min-width: $width;
+    // max-width: $width * 3;
+    // height: $height;
+
+    z-index: 3;
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5em;
+
+    padding: 1em;
+    margin-bottom: 1em;
+    margin-left: 1em;
+    bottom:0;
+
+    background-color: $blue-100;
+    border: 1.5px solid $blue-200;
+    border-radius: 0.45em;
+    color: $blue;
+}
+
+.toastalert-red {
+    background-color: $red-100;
+    border: 1.5px solid $red-200;
+    border-radius: 0.45em;
+    color: $red;
 }
