@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, useTemplateRef, type Ref } from "vue"
-import { get_seconds_from_ymd, get_types, new_transaction } from "@/argent";
+import { get_seconds_from_ymd, get_types } from "@/argent";
 import { type TransactionType, type TransactionEntryForm } from "@/types";
+import { useTransactionStore } from "@/stores/Transaction";
 
 const types: Ref<TransactionType[]> = ref([]);
 
@@ -12,6 +13,8 @@ const amount = useTemplateRef("amount");
 const vendor = useTemplateRef("vendor");
 const description = useTemplateRef("description");
 const container = useTemplateRef("modal-container");
+
+const transactionStore = useTransactionStore()
 
 onBeforeMount(async () => {
     types.value = await get_types()
@@ -40,7 +43,8 @@ const submit_form = () => {
         currency: "CAD",
         unix_timestamp: get_seconds_from_ymd(date.value?.value || "") || new Date().getTime()/1000
     }
-    new_transaction(transaction);
+    transactionStore.new_transaction(transaction);
+    // new_transaction(transaction);
     reset();
     hide();
 }
@@ -93,14 +97,14 @@ defineExpose({
                     <!-- VENDOR -->
                     <div class="col-md-4">
                         <label for="vendor" class="form-label">Vendor</label>
-                        <input ref="vendor" type="text" class="form-control" id="vendor" placeholder="Supermarket"
+                        <input ref="vendor" type="text" class="form-control" id="vendor" placeholder="Amazon"
                             required>
                     </div>
                     <!-- DESCRIPTION -->
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
                         <input ref="description" type="text" class="form-control" id="description"
-                            placeholder="Groceries">
+                            placeholder="Adapter for Europe trip">
                     </div>
 
                     <div class="input-group mb-3">

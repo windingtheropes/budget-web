@@ -1,20 +1,30 @@
 <script setup lang="ts">
 import { ref, useTemplateRef } from 'vue';
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import { create_account } from '@/argent';
-import { type GenericResponse } from '@/types';
+import { type GenericResponse, type ResponseStatus, type SignUpForm } from '@/types';
+import ToastAlert from '@/components/ToastAlert';
 const name = useTemplateRef("name")
 const email = useTemplateRef("email")
 const password = useTemplateRef("password")
 const form = useTemplateRef("loginform")
 
+const router = useRouter()
+
 const send_registration = async () => {
-  const registration = {
-    name: name.value.value, email: email.value.value, password: password.value.value
+  const registration: SignUpForm = {
+    name: name.value?.value || "", email: email.value?.value || "", password: password.value?.value || ""
   }
-  const resp: GenericResponse = await create_account(registration);
-  alert(`${resp.code} ${resp.message}`)
+  const resp: ResponseStatus = await create_account(registration);
+  if(resp.Code != 200) {
+    ToastAlert(`${resp.Code}: ${resp.Message}`, "red")
+    return
+  } else {
+    router.push("/login")
+    return
+  }
 } 
+
 </script>
 
 <template>

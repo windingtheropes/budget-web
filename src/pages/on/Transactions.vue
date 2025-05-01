@@ -1,24 +1,36 @@
 <script setup lang="ts">
 import { computed, ref, type Ref, onBeforeMount, useTemplateRef, onMounted } from "vue"
-import { check_auth, get_types, get_ymd_from_seconds, get_entries } from "@/argent";
-import { type TransactionEntry, type TransactionType } from "@/types";
+import { get_types, get_ymd_from_seconds } from "@/argent";
+import { type GenericResponse, type ResponseStatus, type TransactionEntry, type TransactionType } from "@/types";
 import SidebarContainer from "@/components/on/SidebarContainer.vue";
 import NewTransaction from "@/components/on/NewTransaction.vue";
 import { useRouter } from "vue-router";
+import { useTransactionStore } from "@/stores/Transaction";
+import ToastAlert from "@/components/ToastAlert";
+import { useUserStore } from "@/stores/User";
 const router = useRouter()
+
+const transactionStore = useTransactionStore()
+const userStore = useUserStore()
+
 onBeforeMount(async () => {
-  if (await check_auth() == false) {
-    router.push("/login")
+  const resp: ResponseStatus = await userStore.is_valid_session();
+  const fetch_transactions_response: GenericResponse = await transactionStore.update_transactions()
+  if (fetch_transactions_response.code >= 400) {
+    ToastAlert(fetch_transactions_response.message, "red")
+    return
   }
+  
+  if (resp.Code != 200) {
+      ToastAlert(`${resp.Code}: ${resp.Message}`, "red")
+      router.push("/login")
+      return
+  }
+
+  types.value = await get_types()
 })
 
 let types: Ref<TransactionType[]> = ref([])
-let entries: Ref<TransactionEntry[]> = ref([]);
-
-onMounted(async () => {
-  entries.value = await get_entries();
-  types.value = await get_types()
-});
 
 const nt_dialog = useTemplateRef("new_transaction")
 </script>
@@ -45,7 +57,7 @@ const nt_dialog = useTemplateRef("new_transaction")
           </tr>
         </thead>
         <tbody>
-          <tr v-for="entry in entries" :data-id="entry.Id">
+          <tr v-for="entry in transactionStore.transactions" :data-id="entry.Id">
             <td>{{ get_ymd_from_seconds(entry.Unix_Timestamp) }}</td>
             <td>{{ entry.Type_Id }}</td>
             <td>${{ entry.Amount }} {{ entry.Currency }}</td>

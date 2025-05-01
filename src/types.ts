@@ -51,9 +51,35 @@ export interface GenericResponse {
 	message: string
 }
 export interface ValueResponse<T> {
-	value: T
+	Value: T
 }
 export interface TransactionType {
 	Id: number,
 	Name: string
+}
+export enum messages {
+	_1000 = "Unknown Error",
+	_200 = "Ok",
+	_400 = "Bad Request",
+	_401 = "Unauthorized",
+	_403 = "Not Allowed",
+	_404 = "Not Found",
+	_500 = "Internal Error"
+}
+export enum codes {
+	_1000 = 1000,
+	_200 = 200,
+	_400 = 400,
+	_401 = 401,
+	_403 = 403,
+	_404 = 404,
+	_500 = 500
+}
+
+export interface ResponseStatus {
+	Code: codes,
+	Message: string | undefined
+}
+export const Status = (code: codes, message?: string): ResponseStatus => {
+	return { Code: code, Message: messages[`_${code}`] }
 }
