@@ -4,11 +4,15 @@ const email = useTemplateRef("email");
 const password = useTemplateRef("password");
 
 import ToastAlert from '@/components/ToastAlert';
-import { type GenericResponse, type LoginForm, type ResponseStatus } from '@/types';
+import { type GenericResponse, type LoginForm, type ResponseStatus, type ReturnsResponse } from '@/types';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/User';
+import NavbarContainer from '@/components/NavbarContainer.vue';
+import { handleResponse } from '@/argent';
+import { useTransactionStore } from '@/stores/Transaction';
 
 const userStore = useUserStore()
+const transactionStore = useTransactionStore()
 const router = useRouter()
 const send_login = async () => {
   const credentials: LoginForm = {
@@ -16,6 +20,8 @@ const send_login = async () => {
   }
   const resp: ResponseStatus = await userStore.login(credentials);
   if (resp.Code == 200) {
+    handleResponse(transactionStore.update_transactions)
+    handleResponse(userStore.update_user_info)
     router.push("/on/overview")
     return
   } else {
@@ -26,8 +32,8 @@ const send_login = async () => {
 </script>
 
 <template>
-
-  <div class="content-wrapper">
+  <NavbarContainer>
+    <div class="content-wrapper">
     <h1>Login</h1>
     <form class="login">
       <div class="form-group">
@@ -44,5 +50,5 @@ const send_login = async () => {
       <button type="submit" v-on:click.prevent="send_login()" class="btn btn-primary">Log In</button>
     </form>
   </div>
-
+  </NavbarContainer>
 </template>

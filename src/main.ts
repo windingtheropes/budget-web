@@ -5,6 +5,8 @@ import Transactions from './pages/on/Transactions.vue'
 import Overview from './pages/on/Overview.vue'
 import Login from './pages/Login.vue'
 import Register from './pages/Register.vue'
+import Landing from './pages/Landing.vue'
+
 
 import { createWebHistory, createRouter } from 'vue-router'
 
@@ -13,6 +15,7 @@ import { createPinia } from 'pinia'
 const pinia = createPinia()
 
 const routes = [
+  { path: '/', component: Landing },
   { path: '/on/overview', component: Overview },
   { path: '/on/transactions', component: Transactions },
   { path: '/login', component: Login },

@@ -1,24 +1,28 @@
 import { defineStore } from 'pinia'
-import { Status, codes, messages, type ResponseStatus, type GenericResponse, type LoginForm, type LoginResponse, type SessionForm, type UserInfo } from '@/types'
+import { Status, codes, messages, type ResponseStatus, type GenericResponse, type LoginForm, type LoginResponse, type UserInfo } from '@/types'
 import { ref, type Ref } from 'vue';
 
 
 export const useUserStore = defineStore('user', () => {
-    const token: Ref<string | undefined> = ref();
+    const token: Ref<string | undefined> = ref(localStorage.getItem("token") || undefined);
     const user_info: Ref<UserInfo | undefined> = ref();
-
-
+    const logout = () => {
+        token.value = undefined;
+    }
     const login = async (form: LoginForm): Promise<ResponseStatus> => {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/account/login", {
+        const response = await fetch(`${import.meta.env.VITE_BUDGET_API_URL}/api/account/login`, {
           method: "PUT",
           body: JSON.stringify(form),
         })
         
         const resp: LoginResponse = JSON.parse(await response.text())
-        if(resp.code == 200) {
-            token.value = resp.token
+        if(resp.code != 200) {
+            return Status(resp.code, resp.message)
         }
+
+        token.value = resp.token
+        localStorage.setItem("token", token.value)
         return Status(200)
       }
       catch (error) {
@@ -29,23 +33,28 @@ export const useUserStore = defineStore('user', () => {
         if (!token.value) {
             return Status(403, "No Token")
         }
-        const headers = new Headers()
-        headers.append("Authorization", `Bearer ${token.value}`)
-        const response = await fetch("http://127.0.0.1:3000/api/account/session", {
-            method: "PUT",
-            headers
-        })
-        const resp: GenericResponse = JSON.parse(await response.text())
-        if (resp.code  == 200) {
-            return Status(200)
+        try {
+            const headers = new Headers()
+            headers.append("Authorization", `Bearer ${token.value}`)
+            const response = await fetch(`${import.meta.env.VITE_BUDGET_API_URL}/api/account/session`, {
+                method: "PUT",
+                headers
+            })
+            const resp: GenericResponse = JSON.parse(await response.text())
+            if (resp.code == 200) {
+                return Status(200)
+            }
+            return Status(403)
         }
-        return Status(403)
+        catch (error) {
+            return Status(1000)
+        }
     }
 
     const update_user_info = async (): Promise<ResponseStatus> => {
         const headers = new Headers()
         headers.append("Authorization", `Bearer ${token.value}`)
-        const response = await fetch("http://127.0.0.1:3000/api/account/user", {
+        const response = await fetch(`${import.meta.env.VITE_BUDGET_API_URL}/api/account/user`, {
             method: "PUT",
             headers
         })
@@ -60,6 +69,6 @@ export const useUserStore = defineStore('user', () => {
         return Status(200)
     }
 
-    return { token, user_info, login, is_valid_session, update_user_info }
+    return { token, user_info, login, is_valid_session, update_user_info, logout }
 })
 

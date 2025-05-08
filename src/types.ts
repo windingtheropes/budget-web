@@ -1,4 +1,5 @@
 import type { StringMappingType } from "typescript"
+import { get_month_name } from "./argent"
 
 export interface Tag {
 	Id: number,
@@ -6,36 +7,37 @@ export interface Tag {
 	User_Id: number
 }
 export interface TransactionEntry {
-	Id:             number,
-	User_Id:        number,
-	Type_Id:		number,
-	Vendor: 		string,
-	Msg: 			string,
-	Amount:         number,
+	Id: number,
+	User_Id: number,
+	Type_Id: number,
+	Vendor: string,
+	Msg: string,
+	Amount: number,
 	Tags: Tag[],
-	Currency:       string,
+	Currency: string,
 	Unix_Timestamp: number
 }
 export interface TransactionEntryForm {
-	type_id:		number,
-	msg: 			string,
-	vendor: 		string,
-	amount:         number,
-	currency:       string,
+	type_id: number,
+	msg: string,
+	vendor: string,
+	amount: number,
+	tags: number[],
+	currency: string,
 	unix_timestamp: number
 }
 export interface LoginResponse {
 	code: number,
-	message: string, 
+	message: string,
 	token: string,
 }
 export interface LoginForm {
-	email: string, 
+	email: string,
 	password: string
 }
 export interface SignUpForm {
 	name: string,
-	email: string, 
+	email: string,
 	password: string
 }
 export interface UserInfo {
@@ -51,7 +53,7 @@ export interface GenericResponse {
 	message: string
 }
 export interface ValueResponse<T> {
-	Value: T
+	value: T
 }
 export interface TransactionType {
 	Id: number,
@@ -82,4 +84,8 @@ export interface ResponseStatus {
 }
 export const Status = (code: codes, message?: string): ResponseStatus => {
 	return { Code: code, Message: messages[`_${code}`] }
+}
+
+export interface ReturnsResponse {
+	(...args: any[]): Promise<ResponseStatus>
 }

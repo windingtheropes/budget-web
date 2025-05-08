@@ -1,4 +1,7 @@
+@use 'sass:color';
 @import "../../node_modules/bootstrap/scss/bootstrap";
+@import url('https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700;900&display=swap');
+
 // REFERENCE PALLETE
 // // $blue: hsl(220, 100%, 43%);
 // $muted-blue: hsl(220, 100%, 63%);
@@ -23,12 +26,11 @@
 // $muted-green: hsl(139, 100%, 43%);
 // $muted-orange: #ff9040;
 // $white: hsl(0, 0%, 95%);
-
 $blue-950: shade-color($blue, 85%);
 $blue-1000: shade-color($blue, 90%);
 
 body {
-    user-select: none; 
+    user-select: none;
 }
 
 .tag {
@@ -63,6 +65,7 @@ body {
 .headbar {
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 2em;
 }
 
 .headbar * {
@@ -77,21 +80,26 @@ body {
     color: white;
     background-color: $blue-1000;
     height: 100vh;
-    width: 12.5em;
+    width: 14em;
     position: sticky;
     top: 0;
 
     .sidebar-brand {
+        padding: 1em;
+        display:flex;
+        align-items: center;
         .nav-link.brand {
-            color:white;
-            margin:0;
+            color: white;
+            margin: 0;
             font-weight: 600;
             font-size: 18pt;
             padding-top: 1em;
             padding-bottom: 1em;
         }
+
         // border-bottom: 2px solid $blue-900;
     }
+
     .sidebar-links {
         .nav-link {
             height: 3em;
@@ -99,15 +107,15 @@ body {
             color: $white;
             border-radius: 0.4em;
         }
-    
+
         .nav-link:hover,
         .nav-link:focus {
             color: white;
             background-color: $blue-950;
         }
     }
-   
-    
+
+
 }
 
 .content-container {
@@ -149,11 +157,16 @@ body {
     position: fixed;
     display: flex;
     justify-content: center;
-    margin-top: 5em;
-
+    align-items: center;
+    background-color: rgba($gray-200, 0.5);
+    
     .budget-modal.med {
         width: 35em;
         max-height: 30em;
+    }
+    .budget-modal.small {
+        width: 30em;
+        max-height: 15em;
     }
 
     .budget-modal {
@@ -179,6 +192,7 @@ body {
             * {
                 margin-left: 0.5em;
             }
+
             justify-content: flex-end;
             border-top: 1px solid $white;
         }
@@ -226,7 +240,7 @@ body {
     padding: 1em;
     margin-bottom: 1em;
     margin-left: 1em;
-    bottom:0;
+    bottom: 0;
 
     background-color: $blue-100;
     border: 1.5px solid $blue-200;
@@ -239,4 +253,78 @@ body {
     border: 1.5px solid $red-200;
     border-radius: 0.45em;
     color: $red;
+}
+
+.form-check.tag-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.ov-card {
+    // width: 25em;
+    // background-color: $red;
+    border-radius: 1em;
+    color: white;
+    h1 strong {
+        font-weight: 900;
+    }
+    padding: 1em;
+}
+.ov-card-expenses { 
+    background-color: $red;
+}
+.ov-card-income {
+    background-color: $blue;
+}
+
+
+.big-talk-space {
+    background-color: $blue;
+    color: white;
+    padding: 5em;
+    height: 30em;
+    display: flex;
+    justify-content: center;
+    .big-talk {
+        font-size: 6.5em;
+        font-family: 'Passion One', sans-serif;
+    }
+}
+
+.big-talk-space-alt {
+    padding: 5em;
+    color: $blue-900;
+    background-color: $blue-100;
+    h1 {
+        font-family: 'Passion One', sans-serif;
+    }
+}
+.footer {
+    padding: 5em;
+    padding-top:2em;
+    height: 20em;
+    padding-bottom: 2em;
+    color: $white;
+    bottom:0;
+    background-color: $blue-900;
+
+    // Modify content wrapper inside footer to be a vertical flexbox
+    .content-wrapper {
+        height: 100%; 
+        display: flex; 
+        flex-direction:column; 
+        justify-content: space-between;
+    }
+    h1 {
+        font-family: 'Passion One', sans-serif;
+    }
+}
+
+.loading {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    position: fixed;
+    z-index: 100;
 }

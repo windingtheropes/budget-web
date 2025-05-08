@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, ref, type Ref, onBeforeMount, useTemplateRef, onMounted } from "vue"
-import { get_types, get_ymd_from_seconds } from "@/argent";
-import { type GenericResponse, type ResponseStatus, type TransactionEntry, type TransactionType } from "@/types";
+import { onBeforeMount, useTemplateRef } from "vue"
+import { get_ymd_from_seconds } from "@/argent";
+import { type ResponseStatus } from "@/types";
 import SidebarContainer from "@/components/on/SidebarContainer.vue";
 import NewTransaction from "@/components/on/NewTransaction.vue";
 import { useRouter } from "vue-router";
@@ -13,24 +13,28 @@ const router = useRouter()
 const transactionStore = useTransactionStore()
 const userStore = useUserStore()
 
-onBeforeMount(async () => {
-  const resp: ResponseStatus = await userStore.is_valid_session();
-  const fetch_transactions_response: GenericResponse = await transactionStore.update_transactions()
-  if (fetch_transactions_response.code >= 400) {
-    ToastAlert(fetch_transactions_response.message, "red")
+const delete_transaction = async (id: number) => {
+  const resp: ResponseStatus = await transactionStore.delete_transaction(id)
+  if (resp.Code != 200) {
+    ToastAlert(`${resp.Code}: ${resp.Message}`, "red")
     return
   }
-  
+  return
+}
+
+onBeforeMount(async () => {
+  const resp: ResponseStatus = await userStore.is_valid_session();
   if (resp.Code != 200) {
-      ToastAlert(`${resp.Code}: ${resp.Message}`, "red")
-      router.push("/login")
-      return
+    ToastAlert(`${resp.Code}: ${resp.Message}`, "red")
+    router.push("/login")
+    return
   }
 
-  types.value = await get_types()
+  await transactionStore.update_tags()
+  await transactionStore.update_transactions()
+  await transactionStore.update_types()
+  transactionStore.update_populated_dates();
 })
-
-let types: Ref<TransactionType[]> = ref([])
 
 const nt_dialog = useTemplateRef("new_transaction")
 </script>
@@ -54,16 +58,18 @@ const nt_dialog = useTemplateRef("new_transaction")
             <th scope="col">Vendor</th>
             <th scope="col">Description</th>
             <th scope="col">Tags</th>
+            <th scope="col">Delete</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="entry in transactionStore.transactions" :data-id="entry.Id">
             <td>{{ get_ymd_from_seconds(entry.Unix_Timestamp) }}</td>
-            <td>{{ entry.Type_Id }}</td>
+            <td>{{ transactionStore.get_type_name(entry.Type_Id) }}</td>
             <td>${{ entry.Amount }} {{ entry.Currency }}</td>
-            <td>{{  entry.Vendor }}</td>
+            <td>{{ entry.Vendor }}</td>
             <td>{{ entry.Msg }}</td>
-            <td v-for="tag in entry.Tags"><span :data-id="tag.Id">{{ tag.Name }}</span></td>
+            <td><span v-for="tag in entry.Tags" class="tag" :data-id="tag.Id">{{ tag.Name }}</span></td>
+            <td><button class="btn btn-danger bi bi-trash" v-on:click="delete_transaction(entry.Id)"></button></td>
           </tr>
         </tbody>
       </table>

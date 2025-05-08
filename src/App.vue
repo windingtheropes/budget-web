@@ -1,30 +1,39 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { onBeforeMount, useTemplateRef } from 'vue';
+import { RouterView } from 'vue-router'
+import { useUserStore } from './stores/User';
+import { useTransactionStore } from './stores/Transaction';
+import { handleResponse } from './argent';
+const userStore = useUserStore()
+const transactionStore = useTransactionStore()
+
+// const setLoading = (isLoading: boolean) => {
+//   if (isLoading) {
+//     loading.value?.classList.remove("hidden");
+//   } else {
+//     loading.value?.classList.add("hidden")
+//   }
+// }
+
+// const loading = useTemplateRef("loading")
+onBeforeMount(async () => {
+  // setLoading(true)
+  const isValid = (await userStore.is_valid_session()).Code == 200
+  if (isValid) {
+    // await transactionStore.update_tags()
+    // await transactionStore.update_transactions()
+    // await transactionStore.update_types()
+    // setLoading(false)
+  }
+})
+
+// defineExpose({
+//   setLoading
+// });
+
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <nav class="navbar navbar-expand-lg topnav">
-        <a class="navbar-brand"  href="#">Budget</a>
-        <ul class="navbar-nav topnav-middle">
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/on/overview">Overview</RouterLink>
-          </li>
-        </ul>
-        <ul class="navbar-nav topnav-right">
-          <li class="nav-item">
-            <RouterLink class="nav-link nav-account nav-login pill" to="/login">Log In</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link nav-account nav-signup pill" to="/register">Sign Up</RouterLink>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <body>
-    <RouterView />
-  </body>
+  <!-- <div ref="loading" class="loading"></div> -->
+  <RouterView />
 </template>

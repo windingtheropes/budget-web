@@ -8,7 +8,7 @@ const name = useTemplateRef("name")
 const email = useTemplateRef("email")
 const password = useTemplateRef("password")
 const form = useTemplateRef("loginform")
-
+import NavbarContainer from '@/components/NavbarContainer.vue';
 const router = useRouter()
 
 const send_registration = async () => {
@@ -28,8 +28,8 @@ const send_registration = async () => {
 </script>
 
 <template>
-
-  <div class="content-wrapper">
+  <NavbarContainer>
+    <div class="content-wrapper">
     <h1>Create Account</h1>
     <form ref="loginform" class="login needs-validation" novalidate>
       <div class="form-group">
@@ -51,5 +51,5 @@ const send_registration = async () => {
       <button type="submit" v-on:click.prevent="send_registration()" class="btn btn-primary">Sign Up</button>
     </form>
   </div>
-
+  </NavbarContainer>
 </template>

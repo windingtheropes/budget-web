@@ -3,46 +3,56 @@ import { ref, type Ref } from "vue";
 import { useUserStore } from "@/stores/User";
 import type { ResponseStatus } from "@/types";
 import ToastAlert from "../ToastAlert";
+import { useTransactionStore } from "@/stores/Transaction";
+import { useRouter } from "vue-router";
 let name: Ref<string> = ref('');
 const userStore = useUserStore()
 const updatename = async () => {
-    if(!userStore.user_info) {
+    if (!userStore.user_info) {
         const resp: ResponseStatus = await userStore.update_user_info()
-        if(resp.Code != 200) {
+        if (resp.Code != 200) {
             ToastAlert(`${resp.Code}: ${resp.Message}`, 'red')
             return
         }
-        if(!userStore.user_info) {
+        if (!userStore.user_info) {
             ToastAlert(`Error fetching user info.`, 'red')
             return
         }
     }
     name.value = userStore.user_info.name
 }
+const router = useRouter()
+const logout = () => {
+    userStore.logout();
+    router.push("/login")
+}
 updatename()
 </script>
 
 <template>
-    <div class="flex-container">
-        <div class="sidebar">
-            <ul class="nav flex-column">
-                <div class="sidebar-brand">
-                    <li class="nav-item">
-                        <a class="nav-link brand" href="#">{{ name || "User Name" }}</a>
-                    </li>
-                </div>
-                <div class="sidebar-links">
-                    <li class="nav-item">
-                        <RouterLink class="nav-link nav-login" to="/on/overview">Overview</RouterLink>
-                    </li>
-                    <li class="nav-item">
-                        <RouterLink class="nav-link nav-login" to="/on/transactions">Transactions</RouterLink>
-                    </li>
-                </div>
-            </ul>
-        </div>
-        <div class="content-container">
+    <body>
+        <div class="flex-container">
+            <div class="sidebar">
+                <ul class="nav flex-column">
+                    <div class="sidebar-brand">
+                        <li class="nav-item">
+                            <a class="nav-link brand" href="#">{{ name || "User Name" }}</a>
+                        </li>
+                        <button class="btn btn-danger" v-on:click="logout()">Log Out</button>
+                    </div>
+                    <div class="sidebar-links">
+                        <li class="nav-item">
+                            <RouterLink class="nav-link nav-login" to="/on/overview">Overview</RouterLink>
+                        </li>
+                        <li class="nav-item">
+                            <RouterLink class="nav-link nav-login" to="/on/transactions">Transactions</RouterLink>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+            <div class="content-container">
             <slot></slot>
+            </div>
         </div>
-    </div>
+    </body>
 </template>
