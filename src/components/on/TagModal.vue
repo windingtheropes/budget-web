@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, useTemplateRef, type Ref } from "vue"
 import { get_seconds_from_ymd, get_ymd_from_seconds } from "@/argent";
-import { type TransactionEntryForm, type ResponseStatus } from "@/types";
-import { useTransactionStore } from "@/stores/Transaction";
+import { type TransactionForm, type ResponseStatus } from "@/types";
+import { useTransactionStore } from "@/stores/Argent";
 import ToastAlert from "../ToastAlert";
 import TagSelector from "./TagSelector.vue";
 

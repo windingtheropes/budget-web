@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
 import { useUserStore } from '@/stores/User';
-import { Status, type GenericResponse, type ResponseStatus, type ReturnsResponse, type Tag, type TransactionEntry, type TransactionEntryForm, type TransactionType, type ValueResponse } from '@/types'
+import { Status, type GenericResponse, type ResponseStatus, type ReturnsResponse, type Tag, type Transaction, type TransactionForm, type TransactionType, type ValueResponse } from '@/types'
 import { ref, type Ref } from 'vue';
 import { sort_descending } from '@/argent';
 import DateSnippet, { DateFormats } from '@/datesnippet';
 
 export const useTransactionStore = defineStore('transaction', () => {
-    const transactions: Ref<TransactionEntry[]> = ref([]);
+    const transactions: Ref<Transaction[]> = ref([]);
     const types: Ref<TransactionType[]> = ref([]);
     const tags: Ref<Tag[]> = ref([]);
     const populated_yms: Ref<DateSnippet[]> = ref([]);
@@ -52,14 +52,14 @@ export const useTransactionStore = defineStore('transaction', () => {
         return true
     }
 
-    const sum_of = (entries: TransactionEntry[]): number => {
+    const sum_of = (entries: Transaction[]): number => {
         if (entries.length == 0) { return 0 }
         const amounts = entries.map(e => e.Amount)
         return amounts.reduce((p, c) => {
             return parseFloat((p + c).toFixed(2))
         })
     }
-    const get_transactions_by = (type?: number, tags?: number[]): TransactionEntry[] => {
+    const get_transactions_by = (type?: number, tags?: number[]): Transaction[] => {
         return transactions.value.filter((t) => {
             if (type && t.Type_Id != type) { return false }
             if (tags && !b_cont_all_a(tags, t.Tags.map(v => v.Id))) { return false }
@@ -93,14 +93,14 @@ export const useTransactionStore = defineStore('transaction', () => {
                 return Status(resp.code, resp.message)
             }
 
-            const resp: ValueResponse<TransactionEntry[]> = JSON.parse(await response.text())
+            const resp: ValueResponse<Transaction[]> = JSON.parse(await response.text())
             transactions.value = resp.value
             return Status(200)
         } catch (err) {
             return Status(1000)
         }
     }
-    const new_transaction = async (data: TransactionEntryForm): Promise<ResponseStatus> => {
+    const new_transaction = async (data: TransactionForm): Promise<ResponseStatus> => {
         try {
             const headers = new Headers()
             headers.append("Authorization", `Bearer ${token}`)

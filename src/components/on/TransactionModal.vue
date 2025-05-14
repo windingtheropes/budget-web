@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, useTemplateRef, type Ref } from "vue"
 import { get_seconds_from_ymd, get_ymd_from_seconds } from "@/argent";
-import { type TransactionEntryForm, type ResponseStatus } from "@/types";
-import { useTransactionStore } from "@/stores/Transaction";
+import { type TransactionForm, type ResponseStatus } from "@/types";
+import { useTransactionStore } from "@/stores/Argent";
 import ToastAlert from "../ToastAlert";
 
 // for later
@@ -61,7 +61,7 @@ const submit_form = () => {
     if (new_transaction_form.value?.reportValidity() == false) return
 
     const selected_tags = get_selected_tags_by_id()
-    const transaction: TransactionEntryForm = {
+    const transaction: TransactionForm = {
         type_id: parseInt(type.value?.selectedOptions[0]?.value || "2"),
         msg: description.value?.value || "",
         vendor: vendor.value?.value || "",

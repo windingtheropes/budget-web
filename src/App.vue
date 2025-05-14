@@ -2,7 +2,7 @@
 import { onBeforeMount, useTemplateRef } from 'vue';
 import { RouterView } from 'vue-router'
 import { useUserStore } from './stores/User';
-import { useTransactionStore } from './stores/Transaction';
+import { useTransactionStore } from './stores/Argent';
 import { handleResponse } from './argent';
 const userStore = useUserStore()
 const transactionStore = useTransactionStore()

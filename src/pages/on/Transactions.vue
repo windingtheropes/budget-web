@@ -5,7 +5,7 @@ import { type ResponseStatus } from "@/types";
 import SidebarContainer from "@/components/on/OnContainer.vue";
 import NewTransaction from "@/components/on/TransactionModal.vue";
 import { useRouter } from "vue-router";
-import { useTransactionStore } from "@/stores/Transaction";
+import { useTransactionStore } from "@/stores/Argent";
 import ToastAlert from "@/components/ToastAlert";
 import { useUserStore } from "@/stores/User";
 import { useModalStore } from "@/stores/ModalStore";

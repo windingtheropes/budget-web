@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTransactionStore } from '@/stores/Transaction';
+import { useTransactionStore } from '@/stores/Argent';
 import { computed, useTemplateRef } from 'vue';
 
 const transactionStore = useTransactionStore()

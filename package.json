@@ -8,7 +8,8 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
-    "type-check": "vue-tsc --build"
+    "type-check": "vue-tsc --build",
+    "css": "sass --watch src/assets/main.scss src/assets/main.css"
   },
   "dependencies": {
     "bootstrap": "^5.3.5",

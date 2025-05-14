@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, useTemplateRef, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { type ResponseStatus, type TransactionEntry } from '@/types';
+import { type ResponseStatus, type Transaction } from '@/types';
 import SidebarContainer from '@/components/on/OnContainer.vue'
 import ToastAlert from '@/components/ToastAlert';
 import { useUserStore } from '@/stores/User';
-import { useTransactionStore } from '@/stores/Transaction';
+import { useTransactionStore } from '@/stores/Argent';
 import { useModalStore } from '@/stores/ModalStore';
 const router = useRouter();
 const userStore = useUserStore()
 const transactionStore = useTransactionStore()
 
-const expenses: Ref<TransactionEntry[]> = ref([])
-const income: Ref<TransactionEntry[]> = ref([])
+const expenses: Ref<Transaction[]> = ref([])
+const income: Ref<Transaction[]> = ref([])
 
 onBeforeMount(async () => {
   const resp: ResponseStatus = await userStore.is_valid_session();

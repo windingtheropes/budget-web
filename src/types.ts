@@ -1,12 +1,39 @@
-import type { StringMappingType } from "typescript"
-import { get_month_name } from "./argent"
-
 export interface Tag {
 	Id: number,
+	User_Id: number,
 	Name: string,
-	User_Id: number
+	Budgets: TagBudget[]
 }
-export interface TransactionEntry {
+export interface TagForm {
+	Name:			string,
+	Tag_Budgets:	TagBudgetForm[]
+}
+export interface Budget {
+	Id:      number,
+	User_Id: number,
+	Name:    string,
+	Type_Id: number,
+	Goal:   number
+}
+export interface BudgetEntry {
+	Id:             number,
+	Transaction_Id: number,
+	Budget_Id:      number,
+	Amount:         number
+}
+export interface TagBudget {
+	Id: 		number,
+	Tag_Id:		number,
+	Budget_Id: 	number,
+	Goal:		number,
+	Type_Id:    number
+}
+export interface TagBudgetForm {
+	Budget_Id: 	number,
+	Goal:		number,
+	Type_Id:    number
+}
+export interface Transaction {
 	Id: number,
 	User_Id: number,
 	Type_Id: number,
@@ -17,7 +44,7 @@ export interface TransactionEntry {
 	Currency: string,
 	Unix_Timestamp: number
 }
-export interface TransactionEntryForm {
+export interface TransactionForm {
 	type_id: number,
 	msg: string,
 	vendor: string,
@@ -83,7 +110,7 @@ export interface ResponseStatus {
 	Message: string | undefined
 }
 export const Status = (code: codes, message?: string): ResponseStatus => {
-	return { Code: code, Message: messages[`_${code}`] }
+	return { Code: code, Message: message || messages[`_${code}`] }
 }
 
 export interface ReturnsResponse {
