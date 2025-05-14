@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { ref, type Ref } from "vue";
+import { ref, useTemplateRef, type Ref } from "vue";
 import { useUserStore } from "@/stores/User";
 import type { ResponseStatus } from "@/types";
 import ToastAlert from "../ToastAlert";
-import { useTransactionStore } from "@/stores/Transaction";
 import { useRouter } from "vue-router";
-let name: Ref<string> = ref('');
+import ModalHost from "./ModalHost.vue";
+
+const name: Ref<string> = ref('');
 const userStore = useUserStore()
-const updatename = async () => {
+const updateName = async () => {
     if (!userStore.user_info) {
         const resp: ResponseStatus = await userStore.update_user_info()
         if (resp.Code != 200) {
@@ -26,11 +27,13 @@ const logout = () => {
     userStore.logout();
     router.push("/login")
 }
-updatename()
+updateName()
+
 </script>
 
 <template>
     <body>
+        <ModalHost />
         <div class="flex-container">
             <div class="sidebar">
                 <ul class="nav flex-column">

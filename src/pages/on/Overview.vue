@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, useTemplateRef, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { DateFormats, type ResponseStatus, type TransactionEntry } from '@/types';
-import SidebarContainer from '@/components/on/SidebarContainer.vue'
+import { type ResponseStatus, type TransactionEntry } from '@/types';
+import SidebarContainer from '@/components/on/OnContainer.vue'
 import ToastAlert from '@/components/ToastAlert';
 import { useUserStore } from '@/stores/User';
 import { useTransactionStore } from '@/stores/Transaction';
-import App from '@/App.vue';
+import { useModalStore } from '@/stores/ModalStore';
 const router = useRouter();
 const userStore = useUserStore()
 const transactionStore = useTransactionStore()
@@ -30,10 +30,12 @@ onBeforeMount(async () => {
   expenses.value = transactionStore.transactions.filter(t => { if (t.Type_Id == 1) { return true } })
   income.value = transactionStore.transactions.filter(t => { if (t.Type_Id == 2) { return true } })
 })
-
+const modalStore = useModalStore()
+modalStore.openModal("TagModal")
 </script>
 
 <template>
+  <NewTag></NewTag>
   <SidebarContainer>
     <div class="content-wrapper">
       <div class="headbar" style="display: flex; gap: 1em; justify-content: start;">

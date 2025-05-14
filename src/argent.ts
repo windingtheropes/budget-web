@@ -1,5 +1,5 @@
-import ToastAlert from "./components/ToastAlert"
-import { Status, type ValueResponse, type TransactionType, type SignUpForm, type GenericResponse, type ResponseStatus, type ReturnsResponse } from "./types"
+import ToastAlert from "@/components/ToastAlert"
+import { Status, type ValueResponse, type TransactionType, type SignUpForm, type GenericResponse, type ResponseStatus, type ReturnsResponse } from "@/types"
 export const create_account = async (form: SignUpForm): Promise<ResponseStatus> => {
   try {
     const response = await fetch(`${import.meta.env.VITE_BUDGET_API_URL}/api/account/new`, {

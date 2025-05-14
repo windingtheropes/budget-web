@@ -16,7 +16,7 @@ defineExpose({
 </script>
 
 <template>
-    <div ref="modal-container" class="modal-container hidden">
+    <div ref="modal-container" class="modal-container">
         <slot></slot>
     </div>
 </template>

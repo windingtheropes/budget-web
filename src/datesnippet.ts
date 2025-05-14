@@ -1,4 +1,4 @@
-import { get_month_name } from "./argent"
+import { get_month_name } from "@/argent"
 export enum DateFormats {
     y = 0,
     ym = 1,

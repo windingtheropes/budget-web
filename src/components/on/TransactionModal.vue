@@ -4,17 +4,21 @@ import { get_seconds_from_ymd, get_ymd_from_seconds } from "@/argent";
 import { type TransactionEntryForm, type ResponseStatus } from "@/types";
 import { useTransactionStore } from "@/stores/Transaction";
 import ToastAlert from "../ToastAlert";
-import ModalContainer from "../ModalContainer.vue";
 
-const new_transaction_form = useTemplateRef("newtrans-form");
+// for later
+defineProps(['date', 'type', 'amount', 'vendor', 'description', 'tags'])
+
+const new_transaction_form = useTemplateRef("transaction-form");
 const date = useTemplateRef("date")
 const type = useTemplateRef("type");
 const amount = useTemplateRef("amount");
 const vendor = useTemplateRef("vendor");
 const description = useTemplateRef("description");
-const container = useTemplateRef("modal-container");
+// const container = useTemplateRef("modal-container");
 const tag_list = useTemplateRef("tag-list")
 const transactionStore = useTransactionStore()
+
+const emit = defineEmits(['close'])
 
 const get_selected_tags_by_id = (): number[] => {
     const tags_array: number[] = []
@@ -49,12 +53,9 @@ const reset = () => {
     new_transaction_form.value?.reset()
 }
 const hide = () => {
-    container.value?.classList.add("hidden")
+    // emit this to the parent
+    emit('close')
 }
-const show = () => {
-    container.value?.classList.remove("hidden")
-}
-
 // Form functions
 const submit_form = () => {
     if (new_transaction_form.value?.reportValidity() == false) return
@@ -79,21 +80,16 @@ const cancel_form = () => {
     hide();
 }
 
-// Export template functions
-defineExpose({
-    show
-})
-
 </script>
 
 <template>
-    <div ref="modal-container" class="modal-container hidden">
+    
         <div class="budget-modal med">
             <div class="modal-header">
                 <h5>New Transaction</h5>
             </div>
             <div class="modal-body">
-                <form ref="newtrans-form" class="row g-3 needs-validation">
+                <form ref="transaction-form" class="row g-3 needs-validation">
                     <div class="mb-3">
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon3">Date</span>
@@ -152,5 +148,5 @@ defineExpose({
                 <button type="submit" v-on:click="submit_form()" class="btn btn-primary">Create</button>
             </div>
         </div>
-    </div>
+
 </template>

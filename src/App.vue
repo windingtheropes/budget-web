@@ -20,9 +20,9 @@ onBeforeMount(async () => {
   // setLoading(true)
   const isValid = (await userStore.is_valid_session()).Code == 200
   if (isValid) {
-    // await transactionStore.update_tags()
-    // await transactionStore.update_transactions()
-    // await transactionStore.update_types()
+    await transactionStore.update_tags()
+    await transactionStore.update_transactions()
+    await transactionStore.update_types()
     // setLoading(false)
   }
 })

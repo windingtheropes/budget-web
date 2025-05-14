@@ -2,12 +2,13 @@
 import { onBeforeMount, useTemplateRef } from "vue"
 import { get_ymd_from_seconds } from "@/argent";
 import { type ResponseStatus } from "@/types";
-import SidebarContainer from "@/components/on/SidebarContainer.vue";
-import NewTransaction from "@/components/on/NewTransaction.vue";
+import SidebarContainer from "@/components/on/OnContainer.vue";
+import NewTransaction from "@/components/on/TransactionModal.vue";
 import { useRouter } from "vue-router";
 import { useTransactionStore } from "@/stores/Transaction";
 import ToastAlert from "@/components/ToastAlert";
 import { useUserStore } from "@/stores/User";
+import { useModalStore } from "@/stores/ModalStore";
 const router = useRouter()
 
 const transactionStore = useTransactionStore()
@@ -36,16 +37,16 @@ onBeforeMount(async () => {
   transactionStore.update_populated_dates();
 })
 
-const nt_dialog = useTemplateRef("new_transaction")
+const modalStore = useModalStore();
+
 </script>
 
 <template>
-  <NewTransaction ref="new_transaction" />
   <SidebarContainer>
     <div class="content-wrapper">
       <div class="flex-container headbar">
         <h1>Transactions</h1>
-        <button class="btn btn-warning" v-on:click="nt_dialog?.show()">
+        <button class="btn btn-warning" v-on:click="modalStore.openModal('NewTransaction')">
           New
         </button>
       </div>
