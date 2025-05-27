@@ -5,9 +5,11 @@ import type { ResponseStatus } from "@/types";
 import ToastAlert from "../ToastAlert";
 import { useRouter } from "vue-router";
 import ModalHost from "./ModalHost.vue";
+import { useTransactionStore } from "@/stores/Argent";
 
 const name: Ref<string> = ref('');
 const userStore = useUserStore()
+
 const updateName = async () => {
     if (!userStore.user_info) {
         const resp: ResponseStatus = await userStore.update_user_info()
@@ -20,6 +22,7 @@ const updateName = async () => {
             return
         }
     }
+
     name.value = userStore.user_info.name
 }
 const router = useRouter()
@@ -32,6 +35,7 @@ updateName()
 </script>
 
 <template>
+
     <body>
         <ModalHost />
         <div class="flex-container">
@@ -50,11 +54,17 @@ updateName()
                         <li class="nav-item">
                             <RouterLink class="nav-link nav-login" to="/on/transactions">Transactions</RouterLink>
                         </li>
+                        <li class="nav-item">
+                            <RouterLink class="nav-link nav-login" to="/on/budgets">Budgets</RouterLink>
+                        </li>
+                        <li class="nav-item">
+                            <RouterLink class="nav-link nav-login" to="/on/tags">Tags</RouterLink>
+                        </li>
                     </div>
                 </ul>
             </div>
             <div class="content-container">
-            <slot></slot>
+                <slot></slot>
             </div>
         </div>
     </body>

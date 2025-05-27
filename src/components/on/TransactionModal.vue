@@ -1,44 +1,32 @@
 <script setup lang="ts">
-import { onBeforeMount, ref, useTemplateRef, type Ref } from "vue"
+import { computed, onBeforeMount, ref, useTemplateRef, type Ref } from "vue"
 import { get_seconds_from_ymd, get_ymd_from_seconds } from "@/argent";
-import { type TransactionForm, type ResponseStatus } from "@/types";
+import { type TransactionForm, type ResponseStatus, type BudgetEntryForm } from "@/types";
 import { useTransactionStore } from "@/stores/Argent";
 import ToastAlert from "../ToastAlert";
+import TagSelector from "./TagSelector.vue";
+import DateSnippet, { DateFormat } from "@/datesnippet";
 
-// for later
+
 defineProps(['date', 'type', 'amount', 'vendor', 'description', 'tags'])
 
+// TODO: DON'T ALLOW BUDGET ENTRIES TO ADD UP TO MORE THAN THE TRANSACTION VALUE
+
 const new_transaction_form = useTemplateRef("transaction-form");
-const date = useTemplateRef("date")
+const amount: Ref<number> = ref(0);
+const ds = new DateSnippet({ format: DateFormat.ymd, sep: "-", miliseconds: new Date().getTime() })
+const date: Ref<string> = ref(ds.displayName)
+
 const type = useTemplateRef("type");
-const amount = useTemplateRef("amount");
-const vendor = useTemplateRef("vendor");
-const description = useTemplateRef("description");
+const vendor: Ref<string> = ref("")
+const description: Ref<string> = ref("")
+const tags = useTemplateRef("tags")
+const selectedType = ref(0);
+
 // const container = useTemplateRef("modal-container");
-const tag_list = useTemplateRef("tag-list")
 const transactionStore = useTransactionStore()
 
 const emit = defineEmits(['close'])
-
-const get_selected_tags_by_id = (): number[] => {
-    const tags_array: number[] = []
-    const tags = tag_list.value?.getElementsByTagName("div")
-    if (!tags) return []
-    for (const tag of tags) {
-        const children = tag.getElementsByTagName("input")
-
-        if (children.length == 0) { continue }
-        const input = children[0]
-
-        const data_id = input.getAttribute("data-id")
-        if (!data_id) { continue }
-
-        if (input.checked) {
-            tags_array.push(parseInt(data_id))
-        }
-    }
-    return tags_array
-}
 
 onBeforeMount(async () => {
     const resp: ResponseStatus = await transactionStore.update_tags();
@@ -46,107 +34,181 @@ onBeforeMount(async () => {
         ToastAlert(`${resp.Code}: ${resp.Message}`, "red")
         return
     }
+    await transactionStore.update_budgets();
 })
 
-// HTML wrapper functions
-const reset = () => {
-    new_transaction_form.value?.reset()
+
+interface BreakdownBudget {
+    Id: number,
+    Name: string,
+    Amount: number,
+    Percent: number
 }
-const hide = () => {
-    // emit this to the parent
-    emit('close')
+const budget_breakdowns: Ref<{ [key: number]: BreakdownBudget }> = ref({})
+for (const budget of transactionStore.budgets) {
+    budget_breakdowns.value[budget.Id] = {
+        Id: budget.Id,
+        Name: budget.Name,
+        Amount: 0,
+        Percent: 0
+    }
 }
+const budget = useTemplateRef("budget")
+const refreshAllAmountsByPercentage = () => {
+    for (const i in budget_breakdowns.value) {
+        const breakdown = budget_breakdowns.value[i]
+        updateBreakdownAmountFromPercent(breakdown.Id)
+    }
+}
+const updateBreakdownAmountFromPercent = (budget_id: number) => {
+    const breakdown = budget_breakdowns.value[budget_id]
+    breakdown.Amount = parseFloat((amount.value * (breakdown.Percent / 100)).toFixed(2))
+}
+const updateBreakdownPercentFromAmount = (budget_id: number) => {
+    const breakdown = budget_breakdowns.value[budget_id]
+    breakdown.Percent = parseFloat((breakdown.Amount / amount.value).toFixed(2))
+}
+
+const getBudgetEntries = (): BudgetEntryForm[] => {
+    const budgetEntries: BudgetEntryForm[] = [];
+    if (selectedType.value == 1) {
+        budgetEntries.push(
+            {
+                Budget_Id: parseInt(budget.value?.selectedOptions[0].value || "0"),
+                Amount: amount.value
+            }
+        )
+    } else if (selectedType.value == 2) {
+        for (const i in budget_breakdowns.value) {
+            const breakdown = budget_breakdowns.value[i]
+            if (breakdown.Amount == 0 || breakdown.Percent == 0) continue
+            budgetEntries.push(
+                {
+                    Budget_Id: breakdown.Id,
+                    Amount: breakdown.Amount
+                }
+            )
+        }
+    }
+    return budgetEntries
+}
+
 // Form functions
 const submit_form = () => {
     if (new_transaction_form.value?.reportValidity() == false) return
-
-    const selected_tags = get_selected_tags_by_id()
     const transaction: TransactionForm = {
         type_id: parseInt(type.value?.selectedOptions[0]?.value || "2"),
-        msg: description.value?.value || "",
-        vendor: vendor.value?.value || "",
-        amount: parseFloat(parseFloat(amount.value?.value || "0").toFixed(2)),
-        tags: selected_tags,
+        msg: description.value || "",
+        vendor: vendor.value || "",
+        amount: parseFloat(amount.value.toFixed(2)),
+        tags: tags.value?.selectedTags() || [],
         currency: "CAD",
-        unix_timestamp: get_seconds_from_ymd(date.value?.value || "") || new Date().getTime() / 1000
+        unix_timestamp: new DateSnippet({ymd_string: date.value, sep:"-"}).seconds,
+        budget_entries: getBudgetEntries()
     }
     transactionStore.new_transaction(transaction);
-    // new_transaction(transaction);
-    reset();
-    hide();
-}
-const cancel_form = () => {
-    reset();
-    hide();
+    emit('close')
 }
 
 </script>
 
 <template>
-    
-        <div class="budget-modal med">
-            <div class="modal-header">
-                <h5>New Transaction</h5>
-            </div>
-            <div class="modal-body">
-                <form ref="transaction-form" class="row g-3 needs-validation">
-                    <div class="mb-3">
-                        <div class="input-group">
-                            <span class="input-group-text" id="basic-addon3">Date</span>
-                            <input ref="date" type="date" placeholder="Date" step="0.01" class="form-control"
-                                id="amount" aria-describedby="basic-addon3 basic-addon4"
-                                :value="get_ymd_from_seconds((new Date().getTime()) / 1000, '-')" required>
-                        </div>
-                    </div>
-                    <!-- TYPE -->
-                    <div class="col-md-4">
-                        <label for="type" class="form-label">Type</label>
-                        <select ref="type" class="form-select" id="type" required>
-                            <option selected disabled value="">Choose...</option>
-                            <option v-for="type in transactionStore.types" :value="type.Id">{{ type.Name }}</option>
-                        </select>
-                    </div>
-
-                    <!-- AMOUNT -->
-                    <div class="col-md-4">
-                        <label for="amount" class="form-label">Amount</label>
-                        <div class="input-group">
-                            <input ref="amount" type="number" placeholder="10.24" step="0.01" class="form-control"
-                                id="amount" aria-describedby="basic-addon3 basic-addon4" required>
-                            <span class="input-group-text" id="basic-addon3">CAD</span>
-                        </div>
-                    </div>
-
-                    <!-- VENDOR -->
-                    <div class="col-md-4">
-                        <label for="vendor" class="form-label">Vendor</label>
-                        <input ref="vendor" type="text" class="form-control" id="vendor" placeholder="Amazon" required>
-                    </div>
-                    <!-- DESCRIPTION -->
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <input ref="description" type="text" class="form-control" id="description"
-                            placeholder="Adapter for Europe trip">
-                    </div>
-
-                    <div ref="tag-list" class="mb-3">
-                        <label class="form-label">Tags</label>
-                        <div v-for="tag in transactionStore.tags" class="col-md-4 form-check">
-                            <input :data-id="tag.Id" class="form-check-input" type="checkbox"
-                                id="checkIndeterminateDisabled">
-                            <label :ref="'tag-checkbox-' + tag.Id.toString()" class="form-check-label"
-                                for="checkIndeterminateDisabled">
-                                {{ tag.Name }}
-                            </label>
-                        </div>
-                    </div>
-                </form>
-
-            </div>
-            <div class="modal-footer">
-                <button v-on:click="cancel_form()" class="btn btn-danger">Cancel</button>
-                <button type="submit" v-on:click="submit_form()" class="btn btn-primary">Create</button>
-            </div>
+    <div class="budget-modal med">
+        <div class="modal-header">
+            <h5>New Transaction</h5>
         </div>
+        <div class="modal-body">
+            <form ref="transaction-form" class="row g-3 needs-validation">
+                <div class="mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon3">Date</span>
+                        <input type="date" placeholder="Date" step="0.01" class="form-control" id="amount"
+                            aria-describedby="basic-addon3 basic-addon4"
+                            v-model="date" required>
+                    </div>
+                </div>
+                <!-- TYPE -->
+                <div class="col-md-4">
+                    <label for="type" class="form-label">Type</label>
+                    <select v-on:input="() => {
+                        const selectedValue = type?.selectedOptions[0].value || '0'
+                        selectedType = parseInt(selectedValue)
+                    }" ref="type" class="form-select" id="type" required>
+                        <option selected disabled value="0">Choose...</option>
+                        <option v-for="type in transactionStore.types" :value="type.Id">{{ type.Name }}</option>
+                    </select>
+                </div>
+
+                <!-- AMOUNT -->
+                <div class="col-md-4">
+                    <label for="amount" class="form-label">Amount</label>
+                    <div class="input-group">
+                        <input v-on:input="refreshAllAmountsByPercentage()" v-model="amount" type="number"
+                            placeholder="10.24" step="0.01" class="form-control" id="amount"
+                            aria-describedby="basic-addon3 basic-addon4" required>
+                        <span class="input-group-text" id="basic-addon3">CAD</span>
+                    </div>
+                </div>
+                <!-- VENDOR -->
+                <div class="col-md-4">
+                    <label for="vendor" class="form-label">Vendor</label>
+                    <input v-model="vendor" type="text" class="form-control" id="vendor" placeholder="Amazon" required>
+                </div>
+                <!-- DESCRIPTION -->
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <input v-model="description" type="text" class="form-control" id="description"
+                        placeholder="Adapter for Europe trip">
+                </div>
+
+                <div class="md-3">
+                    <TagSelector ref="tags" />
+                </div>
+
+
+                <h5 v-if="selectedType == 2 || selectedType == 1">Breakdown</h5>
+                <div v-if="selectedType == 1" class="mb-3">
+                    <label for="budget" class="form-label">Budget</label>
+                    <select ref="budget" class="form-select" id="type" required>
+                        <option selected disabled value="none">Choose...</option>
+                        <option v-for="budget in transactionStore.budgets" :value="budget.Id">{{ budget.Name }}</option>
+                    </select>
+                </div>
+                <div v-if="selectedType == 2" class="md-3">
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Budget</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="budget in budget_breakdowns">
+                                <td>{{ budget.Name }}</td>
+                                <td>
+                                    <input type="number" v-model="budget.Amount" step="0.01" class="form-control"
+                                        aria-describedby="basic-addon3 basic-addon4"
+                                        v-on:input="updateBreakdownPercentFromAmount(budget.Id)" required>
+                                </td>
+                                <td><input type="number" class="form-control" v-model="budget.Percent"
+                                        v-on:input="updateBreakdownAmountFromPercent(budget.Id)" required>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </form>
+
+        </div>
+        <div class=" modal-footer">
+            <button v-on:click="emit('close')" class="btn btn-danger">Cancel</button>
+            <button type="submit" v-on:click="submit_form()" class="btn btn-primary">Create</button>
+        </div>
+    </div>
 
 </template>
