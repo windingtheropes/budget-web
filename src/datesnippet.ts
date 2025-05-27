@@ -1,9 +1,10 @@
 import { get_month_name } from "@/argent"
-export enum DateFormats {
+export enum DateFormat {
     y = 0,
     ym = 1,
     ymd = 2,
-    text_ym = 3
+    text_ym = 3,
+    display_1 = 4,
 }
 
 type options = {
@@ -11,14 +12,15 @@ type options = {
     miliseconds?: number,
     ymd_string?: string,
     sep?: string,
-    format?: DateFormats
+    format?: DateFormat
 }
 /**
  * Multifunction date wrapper class
  */
 export default class DateSnippet {
     timestamp: number
-    format: DateFormats
+    format: DateFormat
+    sep: string
     /**
      * Ensure minimum 2 digit number
      */
@@ -63,48 +65,51 @@ export default class DateSnippet {
         }
     }
     constructor({
-        seconds, miliseconds, ymd_string, sep = '-', format = DateFormats.ymd
+        seconds, miliseconds, ymd_string, sep = '-', format = DateFormat.ymd
     }: options) {
-        console.log(format)
         this.format = format
         if (seconds) { this.timestamp = seconds * 1000 } 
         else if (miliseconds) { this.timestamp = miliseconds }
         else if (ymd_string) { this.timestamp = this.get_timestamp_from_ymd(ymd_string, sep)}
-        else this.timestamp = 0
+        else this.timestamp = new Date().getTime()
+        this.sep = sep
     }
-    get seconds() {
+    get_formatted(format: DateFormat): string {
+
+    }
+    get seconds(): number {
         return this.timestamp/1000
     }
-    get miliseconds() {
+    get miliseconds(): number {
         return this.timestamp
     }
-    get month() {
+    get month(): number {
         return this.date.getMonth() + 1
     }
-    get day() {
+    get day(): number {
         return this.date.getDate();
     }
-    get year() {
+    get year(): number {
         return this.date.getFullYear();
     }
-    get date() {
+    get date(): Date {
         return new Date(this.timestamp)
     }
-    displayName(): string {
+    get displayName(): string {
         const today: Date = new Date()
-        if ((this.format == DateFormats.ym || this.format == DateFormats.text_ym) && (today.getFullYear() == this.year && this.month == today.getMonth() + 1)) {
+        if ((this.format == DateFormat.ym || this.format == DateFormat.text_ym) && (today.getFullYear() == this.year && this.month == today.getMonth() + 1)) {
             return 'This Month'
-        } else if ((this.format == DateFormats.y) && (today.getFullYear() == this.year)) {
+        } else if ((this.format == DateFormat.y) && (today.getFullYear() == this.year)) {
             return 'This Year'
         }
         switch (this.format) {
-            case DateFormats.y:
+            case DateFormat.y:
                 return this.year.toString()
-            case DateFormats.ym:
-                return [this.year, this.z(this.month)].join("/")
-            case DateFormats.ymd:
-                return [this.year, this.z(this.month), this.z(this.day)].join("/")
-            case DateFormats.text_ym:
+            case DateFormat.ym:
+                return [this.year, this.z(this.month)].join(this.sep)
+            case DateFormat.ymd:
+                return [this.year, this.z(this.month), this.z(this.day)].join(this.sep)
+            case DateFormat.text_ym:
                 return `${get_month_name(this.month)} ${this.year}`
         }
     }

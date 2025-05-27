@@ -328,3 +328,22 @@ body {
     position: fixed;
     z-index: 100;
 }
+
+.balance-negative { 
+    color: $red;
+}
+
+.balance-positive {
+    color: $green;
+}
+
+table.table tbody td.red {
+    background-color: $red-100;
+    color:$red-700;
+    border-bottom: 1px solid $red-200;
+}
+table.table tbody td.green {
+    background-color: $green-100;
+    color:$green-700;
+    border-bottom: 1px solid $green-200;
+}

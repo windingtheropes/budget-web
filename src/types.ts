@@ -1,8 +1,7 @@
 export interface Tag {
 	Id: number,
-	User_Id: number,
 	Name: string,
-	Budgets: TagBudget[]
+	Tag_Budgets: TagBudget[]
 }
 export interface TagForm {
 	Name:			string,
@@ -15,9 +14,18 @@ export interface Budget {
 	Type_Id: number,
 	Goal:   number
 }
+export interface BudgetForm {
+	Name:    string,
+	Type_Id: number,
+	Goal:   number
+}
 export interface BudgetEntry {
 	Id:             number,
 	Transaction_Id: number,
+	Budget_Id:      number,
+	Amount:         number
+}
+export interface BudgetEntryForm {
 	Budget_Id:      number,
 	Amount:         number
 }
@@ -33,17 +41,27 @@ export interface TagBudgetForm {
 	Goal:		number,
 	Type_Id:    number
 }
-export interface Transaction {
+interface TransactionRoot {
 	Id: number,
 	User_Id: number,
+}
+interface TransactionMeta {
 	Type_Id: number,
 	Vendor: string,
 	Msg: string,
-	Amount: number,
-	Tags: Tag[],
 	Currency: string,
-	Unix_Timestamp: number
+	Tags: Tag[],
+	Unix_Timestamp: number,
 }
+interface TransactionData {
+	Amount: number,
+	Budget_Entries: BudgetEntry[]
+}
+export interface Transaction extends TransactionMeta, TransactionRoot, TransactionData {}
+export interface MetaSignedBudgetedTransaction extends TransactionMeta, TransactionRoot { 
+	Value: number;
+}
+
 export interface TransactionForm {
 	type_id: number,
 	msg: string,
@@ -51,7 +69,15 @@ export interface TransactionForm {
 	amount: number,
 	tags: number[],
 	currency: string,
-	unix_timestamp: number
+	unix_timestamp: number,
+	budget_entries: BudgetEntryForm[]
+}
+export interface something {
+	
+}
+export interface SignedTransaction {
+	amount: number,
+	transaction: Transaction
 }
 export interface LoginResponse {
 	code: number,

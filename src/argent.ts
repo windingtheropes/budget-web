@@ -14,7 +14,9 @@ export const create_account = async (form: SignUpForm): Promise<ResponseStatus> 
     return Status(1000)
   }
 }
-
+export const f_number = (n: number): string => {
+  return n > 0 ? `+${Math.abs(n)}` : n < 0 ? `-${Math.abs(n)}` : `${n}`
+}
 export const get_month_name = (m: number): string | undefined => {
   switch (m) {
       case 1:
@@ -81,7 +83,6 @@ export const get_highest = (arr: number[]): number => {
         highest_index = i
       }
     }
-    console.log(highest_index)
     return highest_index
 }
 /**
