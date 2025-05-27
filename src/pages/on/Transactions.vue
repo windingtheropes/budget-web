@@ -30,11 +30,6 @@ onBeforeMount(async () => {
     router.push("/login")
     return
   }
-
-  await transactionStore.update_tags()
-  await transactionStore.update_transactions()
-  await transactionStore.update_types()
-  transactionStore.update_populated_dates();
 })
 
 const modalStore = useModalStore();
@@ -46,7 +41,7 @@ const modalStore = useModalStore();
     <div class="content-wrapper">
       <div class="flex-container headbar">
         <h1>Transactions</h1>
-        <button class="btn btn-warning" v-on:click="modalStore.openModal('NewTransaction')">
+        <button class="btn btn-warning" v-on:click="modalStore.openModal('Transaction')">
           New
         </button>
       </div>
@@ -59,17 +54,19 @@ const modalStore = useModalStore();
             <th scope="col">Vendor</th>
             <th scope="col">Description</th>
             <th scope="col">Tags</th>
+            <th scope="col">Edit</th>
             <th scope="col">Delete</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="entry in transactionStore.transactions" :data-id="entry.Id">
             <td>{{ get_ymd_from_seconds(entry.Unix_Timestamp) }}</td>
-            <td>{{ transactionStore.get_type_name(entry.Type_Id) }}</td>
-            <td>${{ entry.Amount }} {{ entry.Currency }}</td>
+            <td :class="entry.Type_Id == 2 ? 'green' : 'red'">{{ transactionStore.get_type_name(entry.Type_Id) }}</td>
+            <td :class="entry.Type_Id == 2 ? 'green' : 'red'">${{ entry.Amount }} {{ entry.Currency }}</td>
             <td>{{ entry.Vendor }}</td>
             <td>{{ entry.Msg }}</td>
             <td><span v-for="tag in entry.Tags" class="tag" :data-id="tag.Id">{{ tag.Name }}</span></td>
+            <td><button class="btn btn-warning bi bi-pencil" v-on:click=""></button></td>
             <td><button class="btn btn-danger bi bi-trash" v-on:click="delete_transaction(entry.Id)"></button></td>
           </tr>
         </tbody>
