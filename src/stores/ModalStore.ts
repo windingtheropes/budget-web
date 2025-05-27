@@ -19,9 +19,9 @@ export const useModalStore = defineStore('modal', () => {
 
     // Define the list of deployable modals
     const modals: { [key: string]: Component } = {
-        "NewTransaction": TransactionModal,
-        "BudgetModal": BudgetModal,
-        "TagModal": TagModal
+        "Transaction": TransactionModal,
+        "Budget": BudgetModal,
+        "Tag": TagModal
     }
     
     // Return the Component of the active modal, or nothing
