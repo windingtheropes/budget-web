@@ -3,7 +3,7 @@ import { useUserStore } from '@/stores/User';
 import { Status, type Budget, type BudgetEntry, type BudgetForm, type GenericResponse, type MetaSignedBudgetedTransaction, type ResponseStatus, type ReturnsResponse, type Tag, type TagBudget, type TagForm, type Transaction, type TransactionForm, type TransactionType, type ValueResponse } from '@/types'
 import { computed, ref, type Ref } from 'vue';
 import { sort_descending } from '@/argent';
-import DateSnippet, { DateFormat } from '@/datesnippet';
+import DateSnippet, { DateDetail, DateFormat } from '@/datesnippet';
 
 export const useTransactionStore = defineStore('transaction', () => {
     const transactions: Ref<Transaction[]> = ref([]);
@@ -14,55 +14,27 @@ export const useTransactionStore = defineStore('transaction', () => {
     const userStore = useUserStore()
     const token = userStore.token
     const api_url = import.meta.env.VITE_BUDGET_API_URL
-
+    
     // Now at top regardless if it is populated
     const now_at_top = (arr: DateSnippet[]): DateSnippet[] => {
-        const now = new Date()
-        arr = arr.filter((v, i) => {
-            if(!(
-                v.month == (now.getMonth() + 1)
-                &&
-                v.year == now.getFullYear()
-                &&
-                v.format == DateFormat.text_ym
-            )) {
-                return true
-            }
-            return false
-        })
-        arr.unshift(new DateSnippet({ ymd_string: `${now.getFullYear()}/${now.getMonth() + 1}`, sep: '/', format: DateFormat.text_ym }))
+        const today = new DateSnippet({detail: DateDetail.ym})
+        arr = arr.filter(v => !(v.year == today.year && v.month == today.month && v.detail == DateDetail.ym))
+        arr.unshift(today)
         return arr
     }
     const update_populated_dates = () => {
         const populated: DateSnippet[] = []
         for(const transaction of transactions.value) {
-            const ym_snippet: DateSnippet = new DateSnippet({
-                seconds: transaction.Unix_Timestamp,
-                format: DateFormat.text_ym
-            })
-            const y_snippet: DateSnippet = new DateSnippet({
-                seconds: transaction.Unix_Timestamp,
-                format: DateFormat.y
-            })
-
             // year is not present, add it
-            if(!populated.find(m => m.displayName == y_snippet.displayName)) {
-                populated.push(y_snippet)
+            if(!populated.find(m => m.detail == DateDetail.y)) {
+                populated.push(new DateSnippet({seconds: transaction.Unix_Timestamp, detail: DateDetail.y}))
             }
             // year month is not present, add it
-            if(!populated.find(m => m.displayName == ym_snippet.displayName)) {
-                populated.push(ym_snippet)
+            if(!populated.find(m => m.detail == DateDetail.ym)) {
+                populated.push(new DateSnippet({seconds: transaction.Unix_Timestamp, detail: DateDetail.ym}))
             }
         }
         populated_yms.value = now_at_top(populated)
-    }
-    const b_cont_all_a = <T>(a: T[], b: T[]): boolean => {
-        for (const key of a) {
-            if (b.find(v => v == key)) { continue } else {
-                return false
-            }
-        }
-        return true
     }
 
     const sum_of = (entries: Transaction[]): number => {
@@ -84,7 +56,7 @@ export const useTransactionStore = defineStore('transaction', () => {
                 return Status(response.status)
             }
             const resp: ValueResponse<Tag[]> = JSON.parse(await response.text())
-            tags.value = resp.value
+            tags.value = resp.value || []
             return Status(200)
         } catch (error) {
             return Status(1000)
@@ -104,7 +76,7 @@ export const useTransactionStore = defineStore('transaction', () => {
             }
 
             const resp: ValueResponse<Transaction[]> = JSON.parse(await response.text())
-            transactions.value = resp.value
+            transactions.value = resp.value || []
             return Status(200)
         } catch (err) {
             return Status(1000)
@@ -209,7 +181,7 @@ export const useTransactionStore = defineStore('transaction', () => {
 
             const resp: ValueResponse<TransactionType[]> = JSON.parse(await response.text())
 
-            types.value = resp.value
+            types.value = resp.value || []
             return Status(200)
         } catch (error) {
             return Status(1000)
@@ -241,19 +213,20 @@ export const useTransactionStore = defineStore('transaction', () => {
         return filteredTags
     }
     type msbt_options = {
-        trans?: Transaction[],
         budget_id: number,
         tag_id?: number,
         date_filter?: DateSnippet
     }
     // Get MetaSignedBudgetedTransaction list by a budget id
+    // msbt has a Value field, which rather than amount, is signed and can be used to get useful metrics when comparing against different types
+    // this function takes msbt options, allowing to filter by a date range, budget_id and tag_id all in one
     const get_meta_signed_budgeted_transactions = ({budget_id, tag_id, date_filter}: msbt_options): MetaSignedBudgetedTransaction[] => {
         const MetaSigned: MetaSignedBudgetedTransaction[] = []
         for (const transaction of transactions.value) {
             // Filter by date if present
             if (date_filter) {
-                const ds_trans = new DateSnippet({seconds:transaction.Unix_Timestamp, format:date_filter.format, sep:date_filter.sep})
-                if(!(ds_trans.displayName == date_filter.displayName)) { continue }
+                const transaction_date: DateSnippet = new DateSnippet({seconds:transaction.Unix_Timestamp, detail:date_filter.detail})
+                if(!(transaction_date.get_formatted(DateFormat.ymd) == date_filter.get_formatted(DateFormat.ymd))) continue
             }
             if (transaction.Budget_Entries && transaction.Budget_Entries.length > 0) {
                 const entry_on_transaction = transaction.Budget_Entries.find(b => b.Budget_Id == budget_id)
@@ -297,7 +270,7 @@ export const useTransactionStore = defineStore('transaction', () => {
             }
 
             const resp: ValueResponse<Budget[]> = JSON.parse(await response.text())
-            budgets.value = resp.value
+            budgets.value = resp.value || []
             return Status(200)
         } catch (err) {
             return Status(1000)

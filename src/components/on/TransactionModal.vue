@@ -5,7 +5,7 @@ import { type TransactionForm, type ResponseStatus, type BudgetEntryForm } from 
 import { useTransactionStore } from "@/stores/Argent";
 import ToastAlert from "../ToastAlert";
 import TagSelector from "./TagSelector.vue";
-import DateSnippet, { DateFormat } from "@/datesnippet";
+import DateSnippet, { DateDetail, DateFormat } from "@/datesnippet";
 
 
 defineProps(['date', 'type', 'amount', 'vendor', 'description', 'tags'])
@@ -14,7 +14,7 @@ defineProps(['date', 'type', 'amount', 'vendor', 'description', 'tags'])
 
 const new_transaction_form = useTemplateRef("transaction-form");
 const amount: Ref<number> = ref(0);
-const ds = new DateSnippet({ format: DateFormat.ymd, sep: "-", miliseconds: new Date().getTime() })
+const ds = new DateSnippet({ format: DateFormat.ymd, detail: DateDetail.ymd })
 const date: Ref<string> = ref(ds.displayName)
 
 const type = useTemplateRef("type");

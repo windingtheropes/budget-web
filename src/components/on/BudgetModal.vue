@@ -10,7 +10,8 @@ const type = useTemplateRef("type");
 const goal = useTemplateRef("goal");
 
 const transactionStore = useTransactionStore()
-
+const props = defineProps(['msg'])
+console.log(props.msg)
 const emit = defineEmits(['close'])
 
 onBeforeMount(async () => {
@@ -21,12 +22,6 @@ onBeforeMount(async () => {
     }
 })
 
-// interface tag_budget_breakdown {
-//     tag_id: number,
-//     tag_name: string,
-
-
-// }
 const tag_budgets = 0; 
 // Form functions
 const submit_form = () => {
@@ -51,6 +46,9 @@ const submit_form = () => {
         </div>
         <div class="modal-body">
             <form ref="modal" class="row g-3 needs-validation">
+                <p>
+                    {{ props.msg }}
+                </p>
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
                     <input ref="name" type="text" class="form-control" id="name" placeholder="Spending" required>

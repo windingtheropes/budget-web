@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import { useTransactionStore } from './stores/Argent';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 const transactionStore = useTransactionStore();
 
 onMounted(async () => {
@@ -11,6 +11,7 @@ onMounted(async () => {
   await transactionStore.update_budgets()
   transactionStore.update_populated_dates()
 })
+
 </script>
 
 <template>

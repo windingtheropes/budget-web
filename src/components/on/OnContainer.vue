@@ -6,7 +6,10 @@ import ToastAlert from "../ToastAlert";
 import { useRouter } from "vue-router";
 import ModalHost from "./ModalHost.vue";
 import { useTransactionStore } from "@/stores/Argent";
+import { useModalStore } from "@/stores/ModalStore";
 
+const transactionStore = useTransactionStore()
+const modalStore = useModalStore()
 const name: Ref<string> = ref('');
 const userStore = useUserStore()
 

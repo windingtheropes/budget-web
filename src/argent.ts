@@ -17,35 +17,6 @@ export const create_account = async (form: SignUpForm): Promise<ResponseStatus> 
 export const f_number = (n: number): string => {
   return n > 0 ? `+${Math.abs(n)}` : n < 0 ? `-${Math.abs(n)}` : `${n}`
 }
-export const get_month_name = (m: number): string | undefined => {
-  switch (m) {
-      case 1:
-        return 'January'
-      case 2:
-        return 'February'
-      case 3:
-        return 'March'
-      case 4:
-        return 'April'
-      case 5:
-        return 'May'
-      case 6:
-        return 'June'
-      case 7:
-        return 'July'
-      case 8:
-        return 'August'
-      case 9:
-        return 'September'
-      case 10:
-        return 'October'
-      case 11:
-        return 'November'
-      case 12:
-        return 'December'
-  }
-  return
-}
 
 export const get_seconds_from_ymd = (ymd: string): number => {
   const parts = ymd.split("-")

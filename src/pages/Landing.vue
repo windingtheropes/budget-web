@@ -48,7 +48,7 @@ landing_typing()
                     frustrating for the seasoned, for one reason: spreadsheets. They're difficult to set up
                     and maintain, and only become harder to navigate as they get larger. As powerusers, we recognize and
                     appreciate the power that comes with spreadsheets, so designing a new system meant taking advanced
-                    features into account, taking time to integrate them into a beautifully optimized interface that is
+                    features into account, integrating them into a beautifully optimized interface that is
                     accomodating to anyone, irrespective of technical prowess.</p>
                 <p>budget is designed for the goal-oriented saver, the frugal minimalist, the savvy planner, and
                     anywhere in between, it's designed for you.</p>
