@@ -62,10 +62,10 @@ landing_typing()
                 </div>
                 <div style="display:flex; justify-content: space-between">
                     <div style="display:flex; gap: 0.5em;">
-                        <p>home</p>
-                        <p>overview</p>
-                        <p>login</p>
-                        <p>signup</p>
+                        <RouterLink to="/">home</RouterLink>
+                        <RouterLink to="/on/overview">overview</RouterLink>
+                        <RouterLink to="/login">login</RouterLink>
+                        <RouterLink to="/register">signup</RouterLink>
                     </div>
                     <div>
                         <p>2025 jack anderson</p>

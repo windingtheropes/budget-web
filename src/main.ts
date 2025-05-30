@@ -6,7 +6,8 @@ import Overview from '@/pages/on/Overview.vue'
 import Login from '@/pages/Login.vue'
 import Register from '@/pages/Register.vue'
 import Landing from '@/pages/Landing.vue'
-
+import Budgets from './pages/on/Budgets.vue'
+import Tags from './pages/on/Tags.vue'
 
 import { createWebHistory, createRouter } from 'vue-router'
 
@@ -18,6 +19,8 @@ const routes = [
   { path: '/', component: Landing },
   { path: '/on/overview', component: Overview },
   { path: '/on/transactions', component: Transactions },
+  { path: '/on/budgets', component: Budgets },
+  { path: '/on/tags', component: Tags },
   { path: '/login', component: Login },
   { path: '/register', component: Register }
 ]
@@ -35,3 +38,4 @@ createApp(App)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.js'
 import 'bootstrap-icons/font/bootstrap-icons.css'
+
