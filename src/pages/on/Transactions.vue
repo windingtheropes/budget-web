@@ -41,7 +41,7 @@ const modalStore = useModalStore();
     <div class="content-wrapper">
       <div class="flex-container headbar">
         <h1>Transactions</h1>
-        <button class="btn btn-warning" v-on:click="modalStore.openModal('Transaction')">
+        <button class="btn btn-primary" v-on:click="modalStore.openModal('Transaction')">
           New
         </button>
       </div>

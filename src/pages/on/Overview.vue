@@ -96,25 +96,20 @@ onBeforeMount(async () => {
   await transactionStore.update_budgets()
   transactionStore.update_populated_dates()
 
-
-  if (transactionStore.budgets.length == 0) {
-    modalStore.openModal('Budget', {
-      msg: `
-      Budgets are the backbone of your financial journey here. Whether you're planning to spend smarter or save with purpose, every goal starts with the right budget.
-Create budgets by type — Earnings or Income — and track your progress by logging transactions. Set goals, organize with tags, and get a clear view of where your money's going (and growing).
-      `})
-  }
   update()
 })
 
 // get the set tagbudget goal for the specified tag in the current budget
 const get_tag_goal = (tag: Tag): string => {
-  if (tag.Tag_Budgets) {
-    const tag_budget = tag.Tag_Budgets.find(b => b.Budget_Id == budget_id.value)
-    if (tag_budget) {
+  const budget = get_selected_budget()
+  if (budget) {
+    const tag_budget = budget.Tag_Budgets.find(tb => tb.Tag_Id == tag.Id)
+    if(tag_budget) {
       return (get_selected_date_filter().detail == DateDetail.y ? tag_budget.Goal * 12 : tag_budget.Goal).toString()
-    }
-  } return ''
+    } else return ''
+  } else {
+    return ''
+  }
 }
 </script>
 
@@ -122,7 +117,7 @@ const get_tag_goal = (tag: Tag): string => {
   <NewTag></NewTag>
   <SidebarContainer>
     <div class="content-wrapper">
-      <div class="headbar" style="display: flex; gap: 1em; justify-content: space-between;">
+      <div v-if="transactionStore.budgets.length > 0" class="headbar" style="display: flex; gap: 1em; justify-content: space-between;">
         <h1>Overview</h1>
         <div>
           <div style="display: flex; gap:0.5em; justify-content: space-between;">
@@ -144,7 +139,7 @@ const get_tag_goal = (tag: Tag): string => {
         </div>
       </div>
       <!-- only show if budgets already exist -->
-      <div>
+      <div v-if="transactionStore.budgets.length > 0" >
         <h1>{{
           get_selected_date_filter().get_formatted(DateFormat.text) }}</h1>
         <h1 style="font-size: 3em;" :class="budget_balance.balance == 0 ? '' : budget_balance.balance > 0 ? 'balance-positive' :
@@ -174,6 +169,9 @@ const get_tag_goal = (tag: Tag): string => {
             </tr>
           </tbody>
         </table>
+      </div>
+      <div v-if="transactionStore.budgets.length == 0">
+        <p>No budgets exist on your account. Head over to <a href="/on/budgets">budgets</a> to create one.</p>
       </div>
     </div>
   </SidebarContainer>
