@@ -53,7 +53,7 @@ for (const budget of transactionStore.budgets) {
         Percent: 0
     }
 }
-const budget = useTemplateRef("budget")
+const budget_id = ref(0)
 const refreshAllAmountsByPercentage = () => {
     for (const i in budget_breakdowns.value) {
         const breakdown = budget_breakdowns.value[i]
@@ -74,7 +74,7 @@ const getBudgetEntries = (): BudgetEntryForm[] => {
     if (selectedType.value == 1) {
         budgetEntries.push(
             {
-                Budget_Id: parseInt(budget.value?.selectedOptions[0].value || "0"),
+                Budget_Id: budget_id.value,
                 Amount: amount.value
             }
         )
@@ -143,9 +143,14 @@ const submit_form = () => {
                 <div class="col-md-4">
                     <label for="amount" class="form-label">Amount</label>
                     <div class="input-group">
-                        <input v-on:input="refreshAllAmountsByPercentage()" v-model="amount" type="number"
-                            placeholder="10.24" step="0.01" class="form-control" id="amount"
-                            aria-describedby="basic-addon3 basic-addon4" required>
+                        <input @input="refreshAllAmountsByPercentage()" @keydown="(e) => {
+                                            if (e.key == '-') {
+                                                e.preventDefault()
+                                                return false
+                                            }
+                                        }" min="0" type="number" placeholder="75.00" step="0.01" class="form-control"
+                                            id="amount" v-model="amount" aria-describedby="basic-addon3 basic-addon4"
+                                            required>
                         <span class="input-group-text" id="basic-addon3">CAD</span>
                     </div>
                 </div>
@@ -160,19 +165,17 @@ const submit_form = () => {
                     <input v-model="description" type="text" class="form-control" id="description"
                         placeholder="Adapter for Europe trip">
                 </div>
-
-                <div class="md-3">
-                    <TagSelector ref="tags" />
-                </div>
-
-
+                
                 <h5 v-if="selectedType == 2 || selectedType == 1">Breakdown</h5>
                 <div v-if="selectedType == 1" class="mb-3">
                     <label for="budget" class="form-label">Budget</label>
-                    <select ref="budget" class="form-select" id="type" required>
-                        <option selected disabled value="none">Choose...</option>
+                    <select v-on:change="tags?.update_available_tags(budget_id)" v-model="budget_id" class="form-select" id="type" required>
+                        <option selected disabled value="0">Choose...</option>
                         <option v-for="budget in transactionStore.budgets" :value="budget.Id">{{ budget.Name }}</option>
                     </select>
+                </div>
+                <div class="md-3">
+                    <TagSelector ref="tags"/>
                 </div>
                 <div v-if="selectedType == 2" class="md-3">
 

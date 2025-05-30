@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useTemplateRef, type Ref } from "vue";
+import { onMounted, ref, useTemplateRef, type Ref } from "vue";
 import { useUserStore } from "@/stores/User";
 import type { ResponseStatus } from "@/types";
 import ToastAlert from "../ToastAlert";
@@ -12,7 +12,7 @@ const transactionStore = useTransactionStore()
 const modalStore = useModalStore()
 const name: Ref<string> = ref('');
 const userStore = useUserStore()
-
+// const cbo: Ref<boolean> = ref(false)
 const updateName = async () => {
     if (!userStore.user_info) {
         const resp: ResponseStatus = await userStore.update_user_info()
@@ -26,13 +26,23 @@ const updateName = async () => {
         }
     }
 
-    name.value = userStore.user_info.name
+    name.value = `${userStore.user_info.first_name} ${userStore.user_info.last_name}`
 }
 const router = useRouter()
 const logout = () => {
     userStore.logout();
     router.push("/login")
 }
+
+// onMounted(() => {
+//     document.addEventListener('keydown', (e) => {
+//         if(e.key == "p" && cbo.value == false) {
+//             cbo.value = true
+//             document.getElementById("cb")?.focus()
+//         }
+//         if(e.key == "Escape") cbo.value = false
+//     })
+// })
 updateName()
 
 </script>
@@ -40,6 +50,12 @@ updateName()
 <template>
 
     <body>
+        <!-- <div v-if="cbo" class="modal-container">
+            <div class="command-bar">
+                <input id="cb" type="text" class="form-control" 
+                        placeholder="Start typing" autocomplete="off">
+            </div>
+        </div> -->
         <ModalHost />
         <div class="flex-container">
             <div class="sidebar">
