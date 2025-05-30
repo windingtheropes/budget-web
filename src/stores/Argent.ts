@@ -14,29 +14,34 @@ export const useTransactionStore = defineStore('transaction', () => {
     const userStore = useUserStore()
     const token = userStore.token
     const api_url = import.meta.env.VITE_BUDGET_API_URL
-    
+
     // Now at top regardless if it is populated
     const now_at_top = (arr: DateSnippet[]): DateSnippet[] => {
-        const today = new DateSnippet({detail: DateDetail.ym})
+        const today = new DateSnippet({ detail: DateDetail.ym })
         arr = arr.filter(v => !(v.year == today.year && v.month == today.month && v.detail == DateDetail.ym))
         arr.unshift(today)
         return arr
     }
     const update_populated_dates = () => {
         const populated: DateSnippet[] = []
-        for(const transaction of transactions.value) {
+        for (const transaction of transactions.value) {
             // year is not present, add it
-            if(!populated.find(m => m.detail == DateDetail.y)) {
-                populated.push(new DateSnippet({seconds: transaction.Unix_Timestamp, detail: DateDetail.y}))
+            if (!populated.find(m => m.detail == DateDetail.y)) {
+                populated.push(new DateSnippet({ seconds: transaction.Unix_Timestamp, detail: DateDetail.y }))
             }
             // year month is not present, add it
-            if(!populated.find(m => m.detail == DateDetail.ym)) {
-                populated.push(new DateSnippet({seconds: transaction.Unix_Timestamp, detail: DateDetail.ym}))
+            if (!populated.find(m => m.detail == DateDetail.ym)) {
+                populated.push(new DateSnippet({ seconds: transaction.Unix_Timestamp, detail: DateDetail.ym }))
             }
         }
         populated_yms.value = now_at_top(populated)
     }
-
+    const type_is_positive = (id: number): boolean => {
+        const type: TransactionType | undefined = types.value.find(t => t.Id == id)
+        if (!type) return false
+        if (type.Positive) return true
+        return false
+    }
     const sum_of = (entries: Transaction[]): number => {
         if (entries.length == 0) { return 0 }
         const amounts = entries.map(e => e.Amount)
@@ -129,7 +134,7 @@ export const useTransactionStore = defineStore('transaction', () => {
             })
             const resp: GenericResponse = JSON.parse(await response.text())
             if (resp.code == 200) {
-                await update_budgets();
+                await update_tags();
             }
             return Status(resp.code, resp.message)
         } catch (error) {
@@ -197,20 +202,17 @@ export const useTransactionStore = defineStore('transaction', () => {
         return false
     }
     // Get tags on a budget specified, including those that are not assigned to budgets.
-    const get_budget_tags = (id: number): Tag[] => {
+    const get_budget_tags = (budget_id: number): Tag[] => {
         const filteredTags: Tag[] = []
-        for (const tag of tags.value) {
-            if (tag.Tag_Budgets && tag.Tag_Budgets.length > 0) {
-                if (find_budget_in_tag_budgets(tag.Tag_Budgets, id)) {
-                    filteredTags.push(tag)
-                } else {
-                    continue
-                }
-            } else {
-                filteredTags.push(tag)
-            }
-        }
-        return filteredTags
+        const budget = budgets.value.find(b => b.Id == budget_id)
+        if (!budget) return []
+        else if (budget.Tag_Budgets) {
+            budget.Tag_Budgets.forEach(tb => {
+                const tag = tags.value.find(t => t.Id == tb.Tag_Id)
+                if (tag) filteredTags.push(tag)
+            })
+            return filteredTags
+        } return []
     }
     type msbt_options = {
         budget_id: number,
@@ -220,13 +222,13 @@ export const useTransactionStore = defineStore('transaction', () => {
     // Get MetaSignedBudgetedTransaction list by a budget id
     // msbt has a Value field, which rather than amount, is signed and can be used to get useful metrics when comparing against different types
     // this function takes msbt options, allowing to filter by a date range, budget_id and tag_id all in one
-    const get_meta_signed_budgeted_transactions = ({budget_id, tag_id, date_filter}: msbt_options): MetaSignedBudgetedTransaction[] => {
+    const get_meta_signed_budgeted_transactions = ({ budget_id, tag_id, date_filter }: msbt_options): MetaSignedBudgetedTransaction[] => {
         const MetaSigned: MetaSignedBudgetedTransaction[] = []
         for (const transaction of transactions.value) {
             // Filter by date if present
             if (date_filter) {
-                const transaction_date: DateSnippet = new DateSnippet({seconds:transaction.Unix_Timestamp, detail:date_filter.detail})
-                if(!(transaction_date.get_formatted(DateFormat.ymd) == date_filter.get_formatted(DateFormat.ymd))) continue
+                const transaction_date: DateSnippet = new DateSnippet({ seconds: transaction.Unix_Timestamp, detail: date_filter.detail })
+                if (!(transaction_date.get_formatted(DateFormat.ymd) == date_filter.get_formatted(DateFormat.ymd))) continue
             }
             if (transaction.Budget_Entries && transaction.Budget_Entries.length > 0) {
                 const entry_on_transaction = transaction.Budget_Entries.find(b => b.Budget_Id == budget_id)
@@ -296,6 +298,7 @@ export const useTransactionStore = defineStore('transaction', () => {
         delete_tag,
         budgets,
         get_budget_tags,
+        type_is_positive,
         populated_dates: populated_yms
     }
 })

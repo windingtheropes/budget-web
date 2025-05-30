@@ -1,23 +1,20 @@
 export interface Tag {
 	Id: number,
-	Name: string,
-	Tag_Budgets: TagBudget[]
+	Name: string
 }
 export interface TagForm {
-	Name:			string,
-	Tag_Budgets:	TagBudgetForm[]
+	Name:			string
 }
 export interface Budget {
 	Id:      number,
-	User_Id: number,
 	Name:    string,
-	Type_Id: number,
 	Goal:   number
+	Tag_Budgets: TagBudget[]
 }
 export interface BudgetForm {
 	Name:    string,
-	Type_Id: number,
-	Goal:   number
+	Goal:   number,
+	Tag_Budgets: TagBudgetForm[]
 }
 export interface BudgetEntry {
 	Id:             number,
@@ -37,7 +34,7 @@ export interface TagBudget {
 	Type_Id:    number
 }
 export interface TagBudgetForm {
-	Budget_Id: 	number,
+	Tag_Id: 	number,
 	Goal:		number,
 	Type_Id:    number
 }
@@ -89,13 +86,15 @@ export interface LoginForm {
 	password: string
 }
 export interface SignUpForm {
-	name: string,
+	first_name: string,
+	last_name: string,
 	email: string,
 	password: string
 }
 export interface UserInfo {
 	id: number,
-	name: string,
+	first_name: string,
+	last_name: string,
 	email: string
 }
 export interface SessionForm {
@@ -110,8 +109,10 @@ export interface ValueResponse<T> {
 }
 export interface TransactionType {
 	Id: number,
-	Name: string
+	Name: string,
+	Positive: boolean
 }
+
 export enum messages {
 	_1000 = "Unknown Error",
 	_200 = "Ok",
