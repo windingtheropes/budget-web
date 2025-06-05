@@ -15,8 +15,9 @@ const userStore = useUserStore()
 const transactionStore = useTransactionStore()
 const router = useRouter()
 const send_login = async () => {
+  // TODO: FIX
   const credentials: LoginForm = {
-    email: email.value?.value, password: password.value?.value
+    email: email.value?.value || "", password: password.value?.value || ""
   }
   const resp: ResponseStatus = await userStore.login(credentials);
   if (resp.Code == 200) {

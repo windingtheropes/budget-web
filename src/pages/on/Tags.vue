@@ -53,7 +53,6 @@ onBeforeMount(async () => {
           <tbody>
             <tr v-for="tag in transactionStore.tags" :data-id="tag.Id">
               <td>{{ tag.Name }}</td>
-              <td>{{ tag.Tag_Budgets }}</td>
             </tr>
           </tbody>
         </table>

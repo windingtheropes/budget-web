@@ -6,12 +6,13 @@ import { ref, type Ref } from 'vue';
 export const useUserStore = defineStore('user', () => {
     const token: Ref<string | undefined> = ref(localStorage.getItem("token") || undefined);
     const user_info: Ref<UserInfo | undefined> = ref();
+    const api_url = import.meta.env.VITE_BUDGET_API_URL || "https://budget.alacriware.com/"
     const logout = () => {
         token.value = undefined;
     }
     const login = async (form: LoginForm): Promise<ResponseStatus> => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BUDGET_API_URL}/api/account/login`, {
+        const response = await fetch(`${api_url}/api/account/login`, {
           method: "PUT",
           body: JSON.stringify(form),
         })
@@ -36,7 +37,7 @@ export const useUserStore = defineStore('user', () => {
         try {
             const headers = new Headers()
             headers.append("Authorization", `Bearer ${token.value}`)
-            const response = await fetch(`${import.meta.env.VITE_BUDGET_API_URL}/api/account/session`, {
+            const response = await fetch(`${api_url}/api/account/session`, {
                 method: "PUT",
                 headers
             })
@@ -54,7 +55,7 @@ export const useUserStore = defineStore('user', () => {
     const update_user_info = async (): Promise<ResponseStatus> => {
         const headers = new Headers()
         headers.append("Authorization", `Bearer ${token.value}`)
-        const response = await fetch(`${import.meta.env.VITE_BUDGET_API_URL}/api/account/user`, {
+        const response = await fetch(`${api_url}/api/account/user`, {
             method: "PUT",
             headers
         })
