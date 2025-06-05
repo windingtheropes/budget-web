@@ -6,7 +6,7 @@ import { ref, type Ref } from 'vue';
 export const useUserStore = defineStore('user', () => {
     const token: Ref<string | undefined> = ref(localStorage.getItem("token") || undefined);
     const user_info: Ref<UserInfo | undefined> = ref();
-    const api_url = import.meta.env.VITE_BUDGET_API_URL || "https://budget.alacriware.com/"
+    const api_url = import.meta.env.VITE_BUDGET_API_URL || "https://budget.alacriware.com"
     const logout = () => {
         token.value = undefined;
     }

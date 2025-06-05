@@ -13,7 +13,7 @@ export const useTransactionStore = defineStore('transaction', () => {
     const populated_yms: Ref<DateSnippet[]> = ref([]);
     const userStore = useUserStore()
     const token = userStore.token
-    const api_url = import.meta.env.VITE_BUDGET_API_URL || "https://budget.alacriware.com/"
+    const api_url = import.meta.env.VITE_BUDGET_API_URL || "https://budget.alacriware.com"
 
     // Now at top regardless if it is populated
     const now_at_top = (arr: DateSnippet[]): DateSnippet[] => {
