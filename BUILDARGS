@@ -1,2 +1,0 @@
-TAG=windingtherope/budget-frontend:latest
-BUILD_PLATFORMS=linux/arm64,linux/amd64
