@@ -1,4 +1,5 @@
 import BudgetModal from '@/components/on/BudgetModal.vue';
+import BulkImportModal from '@/components/on/BulkImportModal.vue';
 import TagModal from '@/components/on/TagModal.vue';
 import TransactionModal from '@/components/on/TransactionModal.vue';
 import { defineStore } from 'pinia'
@@ -21,7 +22,8 @@ export const useModalStore = defineStore('modal', () => {
     const modals: { [key: string]: Component } = {
         "Transaction": TransactionModal,
         "Budget": BudgetModal,
-        "Tag": TagModal
+        "Tag": TagModal,
+        "BulkImport": BulkImportModal
     }
     
     // Return the Component of the active modal, or nothing

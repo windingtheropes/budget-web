@@ -9,6 +9,10 @@ import Landing from '@/pages/Landing.vue'
 import Budgets from './pages/on/Budgets.vue'
 import Tags from './pages/on/Tags.vue'
 
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-icons/font/bootstrap-icons.css'
+import 'bootstrap'
+
 import { createWebHistory, createRouter } from 'vue-router'
 
 import { createPinia } from 'pinia'
@@ -34,8 +38,4 @@ createApp(App)
     .use(router)
     .use(pinia)
     .mount('#app')
-
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap/dist/js/bootstrap.js'
-import 'bootstrap-icons/font/bootstrap-icons.css'
 

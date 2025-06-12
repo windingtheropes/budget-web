@@ -105,6 +105,24 @@ export const useTransactionStore = defineStore('transaction', () => {
             return Status(1000)
         }
     }
+    const edit_transaction = async (data: TransactionForm, transaction_id: number): Promise<ResponseStatus> => {
+        try {
+            const headers = new Headers()
+            headers.append("Authorization", `Bearer ${token}`)
+            const response = await fetch(`${api_url}/api/argent/transaction/edit?id=${transaction_id}`, {
+                method: "PUT",
+                headers,
+                body: JSON.stringify(data)
+            })
+            const resp: GenericResponse = JSON.parse(await response.text())
+            if (resp.code == 200) {
+                await update_transactions();
+            }
+            return Status(resp.code, resp.message)
+        } catch (error) {
+            return Status(1000)
+        }
+    }
     const new_budget = async (data: BudgetForm): Promise<ResponseStatus> => {
         try {
             const headers = new Headers()
@@ -123,12 +141,48 @@ export const useTransactionStore = defineStore('transaction', () => {
             return Status(1000)
         }
     }
+    const edit_budget = async (data: BudgetForm, budget_id: number): Promise<ResponseStatus> => {
+        try {
+            const headers = new Headers()
+            headers.append("Authorization", `Bearer ${token}`)
+            const response = await fetch(`${api_url}/api/argent/budget/edit?id=${budget_id}`, {
+                method: "PUT",
+                headers,
+                body: JSON.stringify(data)
+            })
+            const resp: GenericResponse = JSON.parse(await response.text())
+            if (resp.code == 200) {
+                await update_budgets();
+            }
+            return Status(resp.code, resp.message)
+        } catch (error) {
+            return Status(1000)
+        }
+    }
     const new_tag = async (data: TagForm): Promise<ResponseStatus> => {
         try {
             const headers = new Headers()
             headers.append("Authorization", `Bearer ${token}`)
             const response = await fetch(`${api_url}/api/argent/tag/new`, {
                 method: "POST",
+                headers,
+                body: JSON.stringify(data)
+            })
+            const resp: GenericResponse = JSON.parse(await response.text())
+            if (resp.code == 200) {
+                await update_tags();
+            }
+            return Status(resp.code, resp.message)
+        } catch (error) {
+            return Status(1000)
+        }
+    }
+    const edit_tag = async (data: TagForm, tag_id: number): Promise<ResponseStatus> => {
+        try {
+            const headers = new Headers()
+            headers.append("Authorization", `Bearer ${token}`)
+            const response = await fetch(`${api_url}/api/argent/tag/edit?id=${tag_id}`, {
+                method: "PUT",
                 headers,
                 body: JSON.stringify(data)
             })
@@ -169,6 +223,23 @@ export const useTransactionStore = defineStore('transaction', () => {
             const resp: GenericResponse = JSON.parse(await response.text())
             if (resp.code == 200) {
                 await update_transactions();
+            }
+            return Status(resp.code, resp.message)
+        } catch (error) {
+            return Status(1000)
+        }
+    }
+    const delete_budget = async (id: number): Promise<ResponseStatus> => {
+        try {
+            const headers = new Headers()
+            headers.append("Authorization", `Bearer ${token}`)
+            const response = await fetch(`${api_url}/api/argent/budget/delete?id=${id}`, {
+                method: "DELETE",
+                headers
+            })
+            const resp: GenericResponse = JSON.parse(await response.text())
+            if (resp.code == 200) {
+                await update_budgets();
             }
             return Status(resp.code, resp.message)
         } catch (error) {
@@ -280,26 +351,34 @@ export const useTransactionStore = defineStore('transaction', () => {
     }
 
     return {
-        transactions,
         update_transactions,
-        get_meta_signed_budgeted_transactions,
+        transactions,
         new_transaction,
-        types,
-        update_types,
-        get_type_name,
-        new_tag,
-        tags,
-        update_tags,
-        sum_of,
+        edit_transaction,
         delete_transaction,
-        update_populated_dates,
+        get_meta_signed_budgeted_transactions,
+        sum_of,
+
         update_budgets,
-        new_budget,
-        delete_tag,
         budgets,
+        new_budget,
+        edit_budget,
+        delete_budget,
         get_budget_tags,
+
+        update_tags,
+        tags,
+        new_tag,
+        edit_tag,
+        delete_tag,
+
+        update_types,
+        types,
         type_is_positive,
-        populated_dates: populated_yms
+        get_type_name,
+
+        populated_dates: populated_yms,
+        update_populated_dates,
     }
 })
 

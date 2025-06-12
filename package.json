@@ -12,7 +12,8 @@
     "css": "sass --watch src/assets/main.scss src/assets/main.css"
   },
   "dependencies": {
-    "bootstrap": "^5.3.5",
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.6",
     "bootstrap-icons": "^1.11.3",
     "dotenv": "^16.5.0",
     "pinia": "^3.0.2",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",
+    "@types/bootstrap": "^5.2.10",
     "@types/node": "^22.13.9",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
