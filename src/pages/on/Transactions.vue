@@ -41,9 +41,19 @@ const modalStore = useModalStore();
     <div class="content-wrapper">
       <div class="flex-container headbar">
         <h1>Transactions</h1>
-        <button class="btn btn-primary" v-on:click="modalStore.openModal('Transaction')">
-          New
-        </button>
+        <div style="display:flex; gap: 1em;">
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" v-on:click="modalStore.openModal('Transaction')">New</button>
+            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <!-- <li><button class="dropdown-item" v-on:click="modalStore.openModal('BulkImport')">Bulk Import</button></li> -->
+            </ul>
+          </div>
+        </div>
+
       </div>
       <table class="table">
         <thead>

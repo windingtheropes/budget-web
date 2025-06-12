@@ -69,9 +69,6 @@ export interface TransactionForm {
 	unix_timestamp: number,
 	budget_entries: BudgetEntryForm[]
 }
-export interface something {
-	
-}
 export interface SignedTransaction {
 	amount: number,
 	transaction: Transaction
