@@ -47,12 +47,15 @@ onBeforeMount(async () => {
           <thead>
             <tr>
               <th scope="col">Tag</th>
-              <th scope="col">Budgets</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="tag in transactionStore.tags" :data-id="tag.Id">
               <td>{{ tag.Name }}</td>
+              <td>
+              <button class="btn btn-warning bi bi-pencil" v-on:click="modalStore.openModal('Tag', {'tag_id': tag.Id})"></button>
+              <button class="btn btn-danger bi bi-trash" v-on:click="transactionStore.delete_tag(tag.Id)"></button>
+              </td>
             </tr>
           </tbody>
         </table>

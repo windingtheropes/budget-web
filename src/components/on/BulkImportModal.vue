@@ -23,7 +23,7 @@ onBeforeMount(async () => {
 // Form functions
 const submit_form = () => {
     if (form.value?.reportValidity() == false) return
-    
+
     const tag: TagForm = {
         Name: name?.value?.value || "",
     }
@@ -36,10 +36,11 @@ const submit_form = () => {
 <template>
     <div class="budget-modal med">
         <div class="modal-header">
-            <h5>New Tag</h5>
+            <h5>Bulk Import</h5>
         </div>
         <div class="modal-body">
             <form ref="modal" class="needs-validation">
+                <input type="file" @change="onFileChanged($event)" accept="csv/*" capture />
                 <div class="">
                     <label for="name" class="form-label">Name</label>
                     <input ref="name" type="text" class="form-control" id="name" placeholder="Food" required>

@@ -50,7 +50,7 @@ const modalStore = useModalStore();
             <td>{{ budget.Name }}</td>
             <td>{{ budget.Goal }} CAD</td>
             <td><button class="btn btn-warning bi bi-pencil" v-on:click="modalStore.openModal('Budget', {'budget_id': budget.Id})"></button></td>
-            <td><button class="btn btn-danger bi bi-trash" v-on:click=""></button></td>
+            <td><button class="btn btn-danger bi bi-trash" v-on:click="transactionStore.delete_budget(budget.Id)"></button></td>
           </tr>
         </tbody>
       </table>

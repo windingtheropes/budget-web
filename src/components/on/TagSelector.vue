@@ -4,9 +4,9 @@ import type { Tag } from '@/types';
 import { computed, ref, useTemplateRef, type Ref } from 'vue';
 
 const transactionStore = useTransactionStore()
-const props = defineProps({
-    budgetId: Number
-})
+const props = defineProps<{
+  tags: Tag[]
+}>()
 
 const tag_list = useTemplateRef("tags")
 const get_selected_tags_by_id = (): number[] => {
@@ -44,8 +44,9 @@ defineExpose({
     <label class="form-label">Tags</label>
     <div ref="tags">
         <div v-for="tag in available_tags" class="col-md-4 form-check">
-            <input :data-id="tag.Id" class="form-check-input" type="checkbox" id="checkIndeterminateDisabled">
-            <label :ref="'tag-checkbox-' + tag.Id.toString()" class="form-check-label" for="checkIndeterminateDisabled">
+            <input v-if="tags.find(t => t == tag)" :data-id="tag.Id" class="form-check-input" type="checkbox" id="checkIndeterminateDisabled" checked>
+            <input v-else :data-id="tag.Id" class="form-check-input" type="checkbox" id="checkIndeterminateDisabled">
+            <label class="form-check-label" for="checkIndeterminateDisabled">
                 {{ tag.Name }}
             </label>
         </div>

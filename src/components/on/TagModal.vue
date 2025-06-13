@@ -5,11 +5,14 @@ import { useTransactionStore } from "@/stores/Argent";
 import ToastAlert from "../ToastAlert";
 
 const form = useTemplateRef("modal");
-const name = useTemplateRef("name");
+const name: Ref<string | null> = ref(null)
 const transactionStore = useTransactionStore()
 
 // Tags can be simply labels, give the user the option
 const isTagBudget = ref(false)
+const props = defineProps({
+    tag_id: Number
+})
 
 const emit = defineEmits(['close'])
 onBeforeMount(async () => {
@@ -19,19 +22,27 @@ onBeforeMount(async () => {
         return
     }
 })
-
 onMounted(() => {
-    name.value?.focus()
+    if (props.tag_id) {
+        const tag = transactionStore.tags.find(t => t.Id == props.tag_id)
+        if (tag) {
+            name.value = tag.Name
+        }
+    }
 })
-
 // Form functions
 const submit_form = () => {
     if (form.value?.reportValidity() == false) return
     
     const tag: TagForm = {
-        Name: name?.value?.value || "",
+        Name: name?.value || "",
     }
-    transactionStore.new_tag(tag)
+
+    if(props.tag_id) {
+        transactionStore.edit_tag(tag, props.tag_id)
+    } else {
+        transactionStore.new_tag(tag)
+    }
     emit('close')
 }
 
@@ -46,14 +57,14 @@ const submit_form = () => {
             <form ref="modal" class="needs-validation">
                 <div class="">
                     <label for="name" class="form-label">Name</label>
-                    <input ref="name" type="text" class="form-control" id="name" placeholder="Food" required>
+                    <input v-model="name" type="text" class="form-control" id="name" placeholder="Food" required>
                 </div>
             </form>
 
         </div>
         <div class="modal-footer">
             <button v-on:click="emit('close')" class="btn btn-danger">Cancel</button>
-            <button type="submit" v-on:click="submit_form()" class="btn btn-primary">Create</button>
+            <button type="submit" v-on:click="submit_form()" class="btn btn-primary">{{ tag_id ? 'Update' : 'Create'}}</button>
         </div>
     </div>
 
