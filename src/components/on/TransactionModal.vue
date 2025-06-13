@@ -7,24 +7,27 @@ import ToastAlert from "../ToastAlert";
 import TagSelector from "./TagSelector.vue";
 import DateSnippet, { DateDetail, DateFormat } from "@/datesnippet";
 
-
-defineProps(['date', 'type', 'amount', 'vendor', 'description', 'tags'])
-
 // TODO: DON'T ALLOW BUDGET ENTRIES TO ADD UP TO MORE THAN THE TRANSACTION VALUE
+const transactionStore = useTransactionStore()
 
 const new_transaction_form = useTemplateRef("transaction-form");
-const amount: Ref<number> = ref(0);
-const ds = new DateSnippet({ format: DateFormat.ymd, detail: DateDetail.ymd })
-const date: Ref<string> = ref(ds.displayName)
 
-const type = useTemplateRef("type");
-const vendor: Ref<string> = ref("")
-const description: Ref<string> = ref("")
+
+const props = defineProps({
+    transaction_id: Number
+})
+
+const existing_transaction = transactionStore.transactions.find(t => t.Id == props.transaction_id)
+
+const amount: Ref<number> = ref(existing_transaction ? existing_transaction.Amount : 0);
+const ds = existing_transaction ? new DateSnippet({format: DateFormat.ymd, detail: DateDetail.ymd, seconds: existing_transaction.Unix_Timestamp }) : new DateSnippet({ format: DateFormat.ymd, detail: DateDetail.ymd })
+const date: Ref<string> = ref(ds.displayName)
+const vendor: Ref<string> = ref(existing_transaction ? existing_transaction.Vendor : "")
+const description: Ref<string> = ref(existing_transaction ? existing_transaction.Msg : "")
 const tags = useTemplateRef("tags")
-const selectedType = ref(0);
+const type: Ref<number> = ref(existing_transaction ? existing_transaction.Type_Id : 0);
 
 // const container = useTemplateRef("modal-container");
-const transactionStore = useTransactionStore()
 
 const emit = defineEmits(['close'])
 
@@ -71,14 +74,14 @@ const updateBreakdownPercentFromAmount = (budget_id: number) => {
 
 const getBudgetEntries = (): BudgetEntryForm[] => {
     const budgetEntries: BudgetEntryForm[] = [];
-    if (selectedType.value == 1) {
+    if (type.value == 1) {
         budgetEntries.push(
             {
                 Budget_Id: budget_id.value,
                 Amount: amount.value
             }
         )
-    } else if (selectedType.value == 2) {
+    } else if (type.value == 2) {
         for (const i in budget_breakdowns.value) {
             const breakdown = budget_breakdowns.value[i]
             if (breakdown.Amount == 0 || breakdown.Percent == 0) continue
@@ -97,7 +100,7 @@ const getBudgetEntries = (): BudgetEntryForm[] => {
 const submit_form = () => {
     if (new_transaction_form.value?.reportValidity() == false) return
     const transaction: TransactionForm = {
-        type_id: parseInt(type.value?.selectedOptions[0]?.value || "2"),
+        type_id: type.value,
         msg: description.value || "",
         vendor: vendor.value || "",
         amount: parseFloat(amount.value.toFixed(2)),
@@ -106,7 +109,11 @@ const submit_form = () => {
         unix_timestamp: new DateSnippet({ymd_string: date.value, sep:"-"}).seconds,
         budget_entries: getBudgetEntries()
     }
-    transactionStore.new_transaction(transaction);
+    if (props.transaction_id) {
+        transactionStore.edit_transaction(transaction, props.transaction_id)
+    } else {
+        transactionStore.new_transaction(transaction);
+    }
     emit('close')
 }
 
@@ -130,11 +137,8 @@ const submit_form = () => {
                 <!-- TYPE -->
                 <div class="col-md-4">
                     <label for="type" class="form-label">Type</label>
-                    <select v-on:input="() => {
-                        const selectedValue = type?.selectedOptions[0].value || '0'
-                        selectedType = parseInt(selectedValue)
-                    }" ref="type" class="form-select" id="type" required>
-                        <option selected disabled value="0">Choose...</option>
+                    <select v-model="type" class="form-select" id="type" required>
+                        <option selected disabled :value="0">Choose...</option>
                         <option v-for="type in transactionStore.types" :value="type.Id">{{ type.Name }}</option>
                     </select>
                 </div>
@@ -166,8 +170,7 @@ const submit_form = () => {
                         placeholder="Adapter for Europe trip">
                 </div>
                 
-                <h5 v-if="selectedType == 2 || selectedType == 1">Breakdown</h5>
-                <div v-if="selectedType == 1" class="mb-3">
+                <div v-if="type == 1" class="mb-3">
                     <label for="budget" class="form-label">Budget</label>
                     <select v-on:change="tags?.update_available_tags(budget_id)" v-model="budget_id" class="form-select" id="type" required>
                         <option selected disabled value="0">Choose...</option>
@@ -175,9 +178,10 @@ const submit_form = () => {
                     </select>
                 </div>
                 <div class="md-3">
-                    <TagSelector ref="tags"/>
+                    <TagSelector :tags="existing_transaction ? existing_transaction.Tags : []" ref="tags"/>
                 </div>
-                <div v-if="selectedType == 2" class="md-3">
+                <h5 v-if="type == 2 || type == 1">Breakdown</h5>
+                <div v-if="type == 2" class="md-3">
 
                     <table class="table">
                         <thead>
@@ -210,7 +214,7 @@ const submit_form = () => {
         </div>
         <div class=" modal-footer">
             <button v-on:click="emit('close')" class="btn btn-danger">Cancel</button>
-            <button type="submit" v-on:click="submit_form()" class="btn btn-primary">Create</button>
+            <button type="submit" v-on:click="submit_form()" class="btn btn-primary">{{ transaction_id ? 'Update' : 'Create' }}</button>
         </div>
     </div>
 

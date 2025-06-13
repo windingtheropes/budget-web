@@ -48,9 +48,9 @@ const modalStore = useModalStore();
               aria-expanded="false">
               <span class="visually-hidden">Toggle Dropdown</span>
             </button>
-            <ul class="dropdown-menu">
-              <!-- <li><button class="dropdown-item" v-on:click="modalStore.openModal('BulkImport')">Bulk Import</button></li> -->
-            </ul>
+            <!-- <ul class="dropdown-menu">
+              <li><button class="dropdown-item" v-on:click="modalStore.openModal('BulkImport')">Bulk Import</button></li>
+            </ul> -->
           </div>
         </div>
 
@@ -76,7 +76,7 @@ const modalStore = useModalStore();
             <td>{{ entry.Vendor }}</td>
             <td>{{ entry.Msg }}</td>
             <td><span v-for="tag in entry.Tags" class="tag" :data-id="tag.Id">{{ tag.Name }}</span></td>
-            <td><button class="btn btn-warning bi bi-pencil" v-on:click=""></button></td>
+            <td><button class="btn btn-warning bi bi-pencil" v-on:click="modalStore.openModal('Transaction', {transaction_id: entry.Id})"></button></td>
             <td><button class="btn btn-danger bi bi-trash" v-on:click="delete_transaction(entry.Id)"></button></td>
           </tr>
         </tbody>

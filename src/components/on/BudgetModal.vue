@@ -86,7 +86,16 @@ const submit_form = () => {
         return tbfs
     })()
 
-    if (props.budget_id) { } else {
+    if (props.budget_id) {
+        const budget: BudgetForm = {
+            Name: name.value || "",
+            Goal: goal_modifier.value,
+            Tag_Budgets: tag_budgets
+        }
+        transactionStore.edit_budget(budget, props.budget_id)
+
+        emit('close')
+     } else {
         const budget: BudgetForm = {
             Name: name.value || "",
             Goal: goal_modifier.value,
@@ -186,8 +195,7 @@ const update_overview = () => {
         </div>
         <div class="modal-footer">
             <button v-on:click="emit('close')" class="btn btn-danger">Cancel</button>
-            <button type="submit" v-on:click="submit_form()" class="btn btn-primary">{{ budget_id ? "Update" : "Create"
-            }}</button>
+            <button type="submit" v-on:click="submit_form()" class="btn btn-primary">{{ budget_id ? 'Update': 'Create' }}</button>
         </div>
     </div>
 
